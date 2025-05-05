@@ -2,10 +2,15 @@ import { getConnection } from "../database/connection.js";
 import sql from 'mssql'
 
 export const getCupones = async (req, res) => {
-    const pool = await getConnection()
+    try {
+        const pool = await getConnection()
 
-    const result = await pool.request().query("SELECT * FROM Coupons")
-    res.json(result.recordset)
+        const result = await pool.request().query("SELECT * FROM Coupons")
+        res.status(200).json(result.recordset)
+    } catch (error) {
+        console.error("Error al obtener los cupones:", error)
+        res.status(500).json({ message: "Error al obtener los cupones" })
+    }
 }
 
 export const getCupon = async (req, res) => {

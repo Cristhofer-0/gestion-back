@@ -76,3 +76,35 @@ PUT http://localhost:3000/orders/1
 
 ### eliminando un orderw
 DELETE http://localhost:3000/orders/7
+
+
+### obteniendo todos los favoritos
+GET http://localhost:3000/favoritos
+
+### obteniendo un favorito
+GET http://localhost:3000/favoritos/1
+
+### creando un favorito
+POST http://localhost:3000/favoritos
+
+### editando un favorito
+PUT http://localhost:3000/favoritos/1
+
+### eliminando un favorito
+DELETE http://localhost:3000/favoritos/7
+
+
+### obteniendo todos los cupones
+GET http://localhost:3000/cupones
+
+### obteniendo un cupone
+GET http://localhost:3000/cupones/1
+
+### creando un cupone
+POST http://localhost:3000/cupones
+
+### editando un cupone
+PUT http://localhost:3000/cupones/1
+
+### eliminando un cupone
+DELETE http://localhost:3000/cupones/7

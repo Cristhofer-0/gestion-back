@@ -6,10 +6,10 @@ export const getEventos = async (req, res) => {
         const pool = await getConnection()
 
         const result = await pool.request().query("SELECT * FROM Events")
-        res.status(200).json(result.recordset)  // Respuesta exitosa con los datos de los eventos
+        res.status(200).json(result.recordset)
     } catch (error) {
-        console.error("Error al obtener los eventos:", error)  // Se imprime el error en la consola
-        res.status(500).json({ message: "Error al obtener los eventos" })  // Respuesta de error
+        console.error("Error al obtener los eventos:", error)
+        res.status(500).json({ message: "Error al obtener los eventos" })
     }
 
 }
