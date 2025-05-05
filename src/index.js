@@ -1,4 +1,5 @@
 import app from './app.js'
 
 app.listen(3000)
-console.log('servidor iniciado')
+
+console.log('servidor iniciado: http://localhost:3000')
