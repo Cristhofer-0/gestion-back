@@ -11,6 +11,10 @@ export const getUsuarios = async (req, res) => {
 export const getUsuario = async (req, res) => {
     const userId = req.params.id;
 
+    if (isNaN(userId)) {
+        return res.status(400).json({ message: "UserId inválido" });
+    }
+
     try {
         const pool = await getConnection();
         const result = await pool
@@ -29,7 +33,35 @@ export const getUsuario = async (req, res) => {
     }
 }
 
-export const createUsuario = async (req, res)  => {
+export const getUsuarioByEmail = async (req, res) => {
+    // POST /login
+    const Email = req.query.email;
+    const PasswordHash = req.query.PasswordHash;
+
+
+    try {
+        const pool = await getConnection();
+        const result = await pool
+            .request()
+            .input('Email', sql.NVarChar, Email)
+            .input('PasswordHash', sql.NVarChar, PasswordHash)
+            .query('SELECT * FROM Users WHERE Email = @Email AND PasswordHash = @PasswordHash');
+
+        if (result.recordset.length === 0) {
+            console.log(error);
+            return res.status(404).json({ message: "Usuario no encontrado" });
+        }
+
+        res.json(result.recordset[0]);
+
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error al obtener el usuario" });
+    }
+}
+
+export const createUsuario = async (req, res) => {
     const pool = await getConnection()
 
     const result = await pool

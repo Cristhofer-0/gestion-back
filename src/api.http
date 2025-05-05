@@ -17,6 +17,9 @@ DELETE http://localhost:3000/eventos/7
 ### obteniendo todos los usuario
 GET http://localhost:3000/usuarios
 
+### obteniendo un usuario por email
+POST http://localhost:3000/usuarios/login?email=juan.perez@example.com&PasswordHash=hashedpassword1
+
 ### obteniendo un usuario
 GET http://localhost:3000/usuarios/1
 
