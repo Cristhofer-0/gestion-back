@@ -1,0 +1,14 @@
+### obteniendo todos los eventos
+GET http://localhost:3000/eventos
+
+### obteniendo un evento
+GET http://localhost:3000/eventos/1
+
+### creando un evento
+POST http://localhost:3000/eventos
+
+### editando un evento
+PUT http://localhost:3000/eventos/1
+
+### eliminando un evento
+DELETE http://localhost:3000/eventos/7
