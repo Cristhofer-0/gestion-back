@@ -12,3 +12,67 @@ PUT http://localhost:3000/eventos/1
 
 ### eliminando un evento
 DELETE http://localhost:3000/eventos/7
+
+
+### obteniendo todos los usuario
+GET http://localhost:3000/usuarios
+
+### obteniendo un usuario
+GET http://localhost:3000/usuarios/1
+
+### creando un usuario
+POST http://localhost:3000/usuarios
+
+### editando un usuario
+PUT http://localhost:3000/usuarios/1
+
+### eliminando un usuario
+DELETE http://localhost:3000/usuarios/7
+
+
+### obteniendo todos los ticket
+GET http://localhost:3000/tickets
+
+### obteniendo un ticket
+GET http://localhost:3000/tickets/1
+
+### creando un ticket
+POST http://localhost:3000/tickets
+
+### editando un ticket
+PUT http://localhost:3000/tickets/1
+
+### eliminando un ticket
+DELETE http://localhost:3000/tickets/7
+
+
+### obteniendo todos los review
+GET http://localhost:3000/reviews
+
+### obteniendo un revieww
+GET http://localhost:3000/reviews/1
+
+### creando un revieww
+POST http://localhost:3000/reviews
+
+### editando un revieww
+PUT http://localhost:3000/reviews/1
+
+### eliminando un revieww
+DELETE http://localhost:3000/reviews/7
+
+
+### obteniendo todos los order
+GET http://localhost:3000/orders
+
+### obteniendo un orderw
+GET http://localhost:3000/orders/1
+
+### creando un orderw
+POST http://localhost:3000/orders
+
+### editando un orderw
+PUT http://localhost:3000/orders/1
+
+### eliminando un orderw
+DELETE http://localhost:3000/orders/7
