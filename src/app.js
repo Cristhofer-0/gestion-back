@@ -6,6 +6,7 @@ import reviewsRoutes from './routes/reviews.routes.js'
 import ordersRoutes from './routes/orders.routes.js'
 import cuponesRoutes from './routes/coupons.routes.js'
 import favoritosRoutes from './routes/favorites.routes.js'
+import notificacionesRoutes from './routes/notifications.routes.js'
 
 const app = express()
 
@@ -17,5 +18,6 @@ app.use(reviewsRoutes)
 app.use(ordersRoutes)
 app.use(cuponesRoutes)
 app.use(favoritosRoutes)
+app.use(notificacionesRoutes)
 
 export default app

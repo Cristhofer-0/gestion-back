@@ -108,3 +108,19 @@ PUT http://localhost:3000/cupones/1
 
 ### eliminando un cupone
 DELETE http://localhost:3000/cupones/7
+
+
+### obteniendo todos los notificaciones
+GET http://localhost:3000/notificaciones
+
+### obteniendo una notificacion
+GET http://localhost:3000/notificaciones/1
+
+### creando una notificacion
+POST http://localhost:3000/notificaciones
+
+### editando una notificacion
+PUT http://localhost:3000/notificaciones/1
+
+### eliminando una notificacion
+DELETE http://localhost:3000/notificaciones/7
