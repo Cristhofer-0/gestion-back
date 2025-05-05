@@ -2,10 +2,16 @@ import { getConnection } from "../database/connection.js"
 import sql from 'mssql'
 
 export const getEventos = async (req, res) => {
-    const pool = await getConnection()
+    try {
+        const pool = await getConnection()
 
-    const result = await pool.request().query("SELECT * FROM Events")
-    res.json(result.recordset)
+        const result = await pool.request().query("SELECT * FROM Events")
+        res.status(200).json(result.recordset)  // Respuesta exitosa con los datos de los eventos
+    } catch (error) {
+        console.error("Error al obtener los eventos:", error)  // Se imprime el error en la consola
+        res.status(500).json({ message: "Error al obtener los eventos" })  // Respuesta de error
+    }
+
 }
 
 export const getEvento = async (req, res) => {
@@ -30,42 +36,48 @@ export const getEvento = async (req, res) => {
 }
 
 export const createEvento = async (req, res)  => {
-    const pool = await getConnection()
+    try {
+        const pool = await getConnection()
 
-    const result = await pool
-        .request()
-        .input('OrganizerId', sql.Int, req.body.OrganizerId)
-        .input('Title', sql.Text, req.body.Title)
-        .input('Description', sql.Text, req.body.Description)
-        .input('StartDate', sql.DateTime, req.body.StartDate)
-        .input('EndDate', sql.DateTime, req.body.EndDate)
-        .input('Address', sql.Text, req.body.Address)
-        .input('Latitude', sql.Decimal, req.body.Latitude)
-        .input('Longitude', sql.Decimal, req.body.Longitude)
-        .input('Visibility', sql.Text, req.body.Visibility)
-        .input('Categories', sql.Text, req.body.Categories)
-        .input('BannerUrl', sql.Text, req.body.BannerUrl)
-        .input('VideoUrl', sql.Text, req.body.VideoUrl)
-        .input('Status', sql.Text, req.body.Status)
-        .input('Capacity', sql.Int, req.body.Capacity)
-        .query('INSERT INTO Events (OrganizerId, Title, Description, StartDate, EndDate,Address, Latitude, Longitude, Visibility, Categories,BannerUrl, VideoUrl, Status, Capacity) VALUES (@OrganizerId, @Title, @Description, @StartDate, @EndDate,@Address, @Latitude, @Longitude, @Visibility, @Categories,@BannerUrl, @VideoUrl, @Status, @Capacity)');
-    //console.log(result)
-    res.json({
-        OrganizerId: req.body.OrganizerId,
-        Title: req.body.Title,
-        Description: req.body.Description,
-        StartDate: req.body.StartDate,
-        EndDate: req.body.EndDate,
-        Address: req.body.Address,
-        Latitude: req.body.Latitude,
-        Longitude: req.body.Longitude,
-        Visibility: req.body.Visibility,
-        Categories: req.body.Categories,
-        BannerUrl: req.body.BannerUrl,
-        VideoUrl: req.body.VideoUrl,
-        Status: req.body.Status,
-        Capacity: req.body.Capacity 
-    })
+        const result = await pool
+            .request()
+            .input('OrganizerId', sql.Int, req.body.OrganizerId)
+            .input('Title', sql.Text, req.body.Title)
+            .input('Description', sql.Text, req.body.Description)
+            .input('StartDate', sql.DateTime, req.body.StartDate)
+            .input('EndDate', sql.DateTime, req.body.EndDate)
+            .input('Address', sql.Text, req.body.Address)
+            .input('Latitude', sql.Decimal, req.body.Latitude)
+            .input('Longitude', sql.Decimal, req.body.Longitude)
+            .input('Visibility', sql.Text, req.body.Visibility)
+            .input('Categories', sql.Text, req.body.Categories)
+            .input('BannerUrl', sql.Text, req.body.BannerUrl)
+            .input('VideoUrl', sql.Text, req.body.VideoUrl)
+            .input('Status', sql.Text, req.body.Status)
+            .input('Capacity', sql.Int, req.body.Capacity)
+            .query('INSERT INTO Events (OrganizerId, Title, Description, StartDate, EndDate, Address, Latitude, Longitude, Visibility, Categories, BannerUrl, VideoUrl, Status, Capacity) VALUES (@OrganizerId, @Title, @Description, @StartDate, @EndDate, @Address, @Latitude, @Longitude, @Visibility, @Categories, @BannerUrl, @VideoUrl, @Status, @Capacity)');
+
+        // Respuesta exitosa
+        res.status(201).json({
+            OrganizerId: req.body.OrganizerId,
+            Title: req.body.Title,
+            Description: req.body.Description,
+            StartDate: req.body.StartDate,
+            EndDate: req.body.EndDate,
+            Address: req.body.Address,
+            Latitude: req.body.Latitude,
+            Longitude: req.body.Longitude,
+            Visibility: req.body.Visibility,
+            Categories: req.body.Categories,
+            BannerUrl: req.body.BannerUrl,
+            VideoUrl: req.body.VideoUrl,
+            Status: req.body.Status,
+            Capacity: req.body.Capacity 
+        });
+    } catch (error) {
+        console.error("Error al crear el evento:", error);
+        res.status(500).json({ message: "Error al crear el evento" });
+    }
 }
 
 export const updateEvento = async (req, res) => {
