@@ -18,7 +18,7 @@ DELETE http://localhost:3000/eventos/7
 GET http://localhost:3000/usuarios
 
 ### obteniendo un usuario por email
-POST http://localhost:3000/usuarios/login?email=juan.perez@example.com&PasswordHash=hashedpassword1
+####### USAR POSTMAN O DESDE EL NAVEGADOR PARA VERIFICAR
 
 ### obteniendo un usuario
 GET http://localhost:3000/usuarios/1
@@ -30,7 +30,7 @@ POST http://localhost:3000/usuarios
 PUT http://localhost:3000/usuarios/1
 
 ### eliminando un usuario
-DELETE http://localhost:3000/usuarios/7
+DELETE http://localhost:3000/usuarios/5
 
 
 ### obteniendo todos los ticket
