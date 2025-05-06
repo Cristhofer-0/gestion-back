@@ -38,10 +38,22 @@ export const loginUsuario = async (req, res) => {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
 
-        const passwordMatch = await bcrypt.compare(password, user.PasswordHash);
-        if (!passwordMatch) {
-        return res.status(401).json({ message: 'Contraseña incorrecta' });
+        const hashedPassword = user.PasswordHash;
+
+        let passwordMatch = false;
+
+        // Verifica si la contraseña está hasheada (bcrypt hashes typically start with $2)
+        if (hashedPassword.startsWith('$2')) {
+            passwordMatch = await bcrypt.compare(password, hashedPassword);
+        } else {
+            // Contraseña en texto plano (caso antiguo o mal guardado)
+            passwordMatch = password === hashedPassword;
         }
+
+        if (!passwordMatch) {
+            return res.status(401).json({ message: 'Contraseña incorrecta' });
+        }
+
 
         const { PasswordHash, ...userWithoutPassword } = user.toJSON();
         res.json(userWithoutPassword);
