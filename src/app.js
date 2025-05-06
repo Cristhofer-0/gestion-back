@@ -1,4 +1,6 @@
 import express from 'express'
+import cors from 'cors'
+
 import eventosRoutes from './routes/eventos.routes.js'
 import usuariosRoutes from './routes/usuarios.routes.js'
 import ticketsRoutes from './routes/tickets.routes.js'
@@ -8,7 +10,14 @@ import cuponesRoutes from './routes/coupons.routes.js'
 import favoritosRoutes from './routes/favorites.routes.js'
 import notificacionesRoutes from './routes/notifications.routes.js'
 
+
 const app = express()
+//PARA QUE CUALQUIER PUERTO PUEDA INGRESAR
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+}));
 
 app.use(express.json())
 app.use(eventosRoutes)

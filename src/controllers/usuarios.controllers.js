@@ -33,23 +33,21 @@ export const getUsuario = async (req, res) => {
     }
 }
 
-export const getUsuarioByEmail = async (req, res) => {
+export const loginUsuario = async (req, res) => {
     // POST /login
-    const Email = req.query.email;
-    const PasswordHash = req.query.PasswordHash;
+    const { email, password } = req.body; //ASI DEBEN SER LOS PARAMETROS EN EL FORMULARIO
 
 
     try {
         const pool = await getConnection();
         const result = await pool
             .request()
-            .input('Email', sql.NVarChar, Email)
-            .input('PasswordHash', sql.NVarChar, PasswordHash)
+            .input('Email', sql.NVarChar, email)
+            .input('PasswordHash', sql.NVarChar, password)
             .query('SELECT * FROM Users WHERE Email = @Email AND PasswordHash = @PasswordHash');
 
         if (result.recordset.length === 0) {
-            console.log(error);
-            return res.status(404).json({ message: "Usuario no encontrado" });
+            return res.status(404).json({ message: "Usuario no encontrado" + email  + password });	
         }
 
         res.json(result.recordset[0]);
