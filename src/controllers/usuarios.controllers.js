@@ -71,7 +71,12 @@ export const registerUsuario = async (req, res) => {
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(PasswordHash, saltRounds);
     
-        const user = await User.create({ ...userData, PasswordHash: hashedPassword });
+        const user = await User.create({
+            ...userData,
+            Email,
+            DNI,
+            PasswordHash: hashedPassword
+        });
     
         const { PasswordHash: _, ...userWithoutPassword } = user.toJSON(); // excluye la contraseña
         res.status(201).json(userWithoutPassword);
