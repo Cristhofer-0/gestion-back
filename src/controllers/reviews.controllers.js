@@ -9,6 +9,7 @@ export const getReviews = async (req, res) => {
         res.status(500).json({ message: 'Error al obtener los reviews' });
     }
 }
+
 export const getReview = async (req, res) => {
     const reviewId = req.params.id;
     if (isNaN(reviewId)) {
