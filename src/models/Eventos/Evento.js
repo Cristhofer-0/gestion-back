@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../../config/connection.js';
 
-const Events =sequelize.define( 'Events',{
+const Event =sequelize.define( 'Event',{
     EventId: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -47,5 +47,5 @@ const Events =sequelize.define( 'Events',{
     timestamps: false
 });
 
-export default Events;
+export default Event;
 
