@@ -102,7 +102,20 @@ export const updateUsuario = async (req, res) => {
     const userId = req.params.id;
 
     try {
-        const [updatedRows] = await User.update(req.body, {
+        const updateData = { ...req.body };
+
+        // Verificar si se está actualizando la contraseña
+        if (updateData.PasswordHash) {
+            const looksHashed = typeof updateData.PasswordHash === 'string' &&
+                                updateData.PasswordHash.startsWith('$2b$');
+
+            if (!looksHashed) {
+                const saltRounds = 10;
+                updateData.PasswordHash = await bcrypt.hash(updateData.PasswordHash, saltRounds);
+            }
+        }
+
+        const [updatedRows] = await User.update(updateData, {
             where: { UserId: userId },
         });
 
