@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { createUsuario, deleteUsuario, getUsuario, getUsuarios, updateUsuario, loginUsuario} from '../controllers/usuarios.controllers.js'
+import { deleteUsuario, getUsuario, getUsuarios, updateUsuario, loginUsuario, registerUsuario} from '../controllers/usuarios.controllers.js'
 
 const router = Router()
 
@@ -7,7 +7,7 @@ router.get('/usuarios', getUsuarios)
 
 router.get('/usuarios/:id', getUsuario)
 
-router.post('/usuarios', createUsuario)
+router.post('/usuarios/registrar', registerUsuario)
 
 router.put('/usuarios/:id', updateUsuario)
 
