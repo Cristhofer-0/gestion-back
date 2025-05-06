@@ -1,3 +1,5 @@
+####### USAR POSTMAN O DESDE EL NAVEGADOR PARA VERIFICAR
+
 ### obteniendo todos los eventos
 GET http://localhost:3000/eventos
 
@@ -18,7 +20,6 @@ DELETE http://localhost:3000/eventos/7
 GET http://localhost:3000/usuarios
 
 ### obteniendo un usuario por email
-####### USAR POSTMAN O DESDE EL NAVEGADOR PARA VERIFICAR
 
 ### obteniendo un usuario
 GET http://localhost:3000/usuarios/1
