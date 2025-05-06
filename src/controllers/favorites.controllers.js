@@ -1,4 +1,4 @@
-import Favorito from '../models/Favoritos/Favoritos.js';
+import Favorito from '../models/Favoritos/Favorito.js';
 
 export const getFavoritos = async (req, res) => {
     try {
