@@ -1,116 +1,77 @@
-//import { getConnection } from "../database/connection.js";
-import sql from 'mssql'
+import Notificacion from '../models/Notificacion/Notificacion.js';
 
 export const getNotificaciones = async (req, res) => {
     try {
-        const pool = await getConnection()
-
-        const result = await pool.request().query("SELECT * FROM Notifications")
-        res.status(200).json(result.recordset)
+        const notificaciones = await Notificacion.findAll();
+        res.json(notificaciones);
     } catch (error) {
-        console.error("Error al obtener las notificaciones:", error)
-        res.status(500).json({ message: "Error al obtener las notificaciones" })
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener los notificaciones' });
     }
 }
 
 export const getNotificacion = async (req, res) => {
-    const notificationId = req.params.id;
+    const notificacionId = req.params.id;
+    if (isNaN(notificacionId)) {
+        return res.status(400).json({ message: 'NotificacionId inválido' });
+    }
 
     try {
-        const pool = await getConnection();
-        const result = await pool
-            .request()
-            .input('NotificationId', sql.Int, notificationId)
-            .query('SELECT * FROM Notifications WHERE NotificationId = @NotificationId');
-
-        if (result.recordset.length === 0) {
-            return res.status(404).json({ message: "Notificacion no encontrada" });
+        const notificacion = await Notificacion.findByPk(notificacionId);
+        if (!notificacion) {
+            return res.status(404).json({ message: 'Notificación no encontrada' });
         }
-
-        res.json(result.recordset[0]);
+        res.json(notificacion);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Error al obtener la notificacion" });
+        res.status(500).json({ message: 'Error al obtener la notificación' });
     }
 }
 
-export const createNotificacion = async (req, res)  => {
+export const createNotificacion = async (req, res) => {
     try {
-        const pool = await getConnection()
-
-        const result = await pool
-            .request()
-            .input('UserId', sql.Int, req.body.UserId)
-            .input('Type', sql.NVarChar(50), req.body.Type)
-            .input('Message', sql.Text, req.body.Message)
-            .input('ReadStatus', sql.Bit, req.body.ReadStatus)
-            .query(`
-                INSERT INTO Notifications (UserId, Type,Message,ReadStatus)
-                VALUES (@UserId, @Type,@Message,@ReadStatus)
-            `);
-
-        res.status(201).json({
-            UserId: req.body.UserId,
-            Type: req.body.Type,
-            Message: req.body.Message,
-            ReadStatus: req.body.ReadStatus,
-        });
+        const notificacion = await Notificacion.create(req.body);
+        res.status(201).json(notificacion);
     } catch (error) {
-        console.error("Error al crear la nueva notificacion:", error);
-        res.status(500).json({ message: "Error al crear la nueva notificacion" });
+        console.error(error);
+        res.status(500).json({ message: 'Error al crear la notificación' });
     }
 }
 
 export const updateNotificacion = async (req, res) => {
-    const notificationId = req.params.id;
-    const {
-        UserId,
-        Type,
-        Message,
-        ReadStatus,
-    } = req.body;
+    const notificacionId = req.params.id;
 
     try {
-        const pool = await getConnection();
-        await pool
-            .request()
-            .input('NotificationId', sql.Int, notificationId)
-            .input('UserId', sql.Int, UserId)
-            .input('Type', sql.NVarChar(50), Type)
-            .input('Message', sql.Text, Message)
-            .input('ReadStatus', sql.Bit, ReadStatus)
-            .query(`
-                UPDATE Notifications
-                SET UserId = @UserId,
-                    Type = @Type,
-                    Message = @Message,
-                    ReadStatus = @ReadStatus
-                WHERE NotificationId = @NotificationId
-            `);
+        const [updatedRows] = await Notificacion.update(req.body, {
+            where: { NotificationId: notificacionId },
+        });
 
-        res.status(200).json({ message: "Notificacion actualizada correctamente" });
+        if (updatedRows === 0) {
+            return res.status(404).json({ message: 'Notificación no encontrada o sin cambios' });
+        }
+
+        res.json({ message: 'Notificación actualizada correctamente' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Error al actualizar la notificacion" });
+        res.status(500).json({ message: 'Error al actualizar la notificación' });
     }
 }
 
 export const deleteNotificacion = async (req, res) => {
-    const notificationId = req.params.id;
+    const notificacionId = req.params.id;
 
     try {
-        const pool = await getConnection();
-        const result = await pool.request()
-            .input('NotificationId', sql.Int, notificationId)
-            .query('DELETE FROM Notifications WHERE NotificationId = @NotificationId');
+        const deletedRows = await Notificacion.destroy({
+            where: { NotificationId: notificacionId },
+        });
 
-        if (result.rowsAffected[0] === 0) {
-            return res.status(404).json({ message: "Notificacion no encontrada" });
+        if (deletedRows === 0) {
+            return res.status(404).json({ message: 'Notificación no encontrada' });
         }
 
-        res.json({ message: "Notificacion eliminada correctamente" });
+        res.json({ message: 'Notificación eliminada correctamente' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Error al eliminar la notificacion" });
+        res.status(500).json({ message: 'Error al eliminar la notificación' });
     }
 }
