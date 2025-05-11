@@ -37,10 +37,12 @@ CREATE TABLE Events (
     VideoUrl NVARCHAR(255),
     Status NVARCHAR(20) CHECK (Status IN ('draft', 'pending_approval', 'published', 'cancelled')) DEFAULT 'draft',
     Capacity INT,
-    CreatedAt DATETIME DEFAULT GETDATE(),
-    UpdatedAt DATETIME DEFAULT GETDATE(),
+    createdAt  DATETIMEOFFSET,
+    updatedAt  DATETIMEOFFSET,
     CONSTRAINT FK_Events_Users FOREIGN KEY (OrganizerId) REFERENCES Users(UserId)
 );
+
+  
 
 -- Tabla de Tickets
 CREATE TABLE Tickets (
@@ -50,10 +52,12 @@ CREATE TABLE Tickets (
     Price DECIMAL(10,2) NOT NULL,
     Description NVARCHAR(255),
     StockAvailable INT NOT NULL,
-    CreatedAt DATETIME DEFAULT GETDATE(),
-    UpdatedAt DATETIME DEFAULT GETDATE(),
+    createdAt  DATETIMEOFFSET,
+    updatedAt DATETIMEOFFSET,
     CONSTRAINT FK_Tickets_Events FOREIGN KEY (EventId) REFERENCES Events(EventId)
 );
+
+
 
 -- Tabla de Pedidos (Orders)
 CREATE TABLE Orders (
@@ -81,10 +85,12 @@ CREATE TABLE Reviews (
     UserId INT NOT NULL,
     Rating INT CHECK (Rating BETWEEN 1 AND 5) NOT NULL,
     Comment NVARCHAR(MAX),
-    CreatedAt DATETIME DEFAULT GETDATE(),
+    createdAt DATETIMEOFFSET,
     CONSTRAINT FK_Reviews_Events FOREIGN KEY (EventId) REFERENCES Events(EventId),
     CONSTRAINT FK_Reviews_Users FOREIGN KEY (UserId) REFERENCES Users(UserId)
 );
+ 
+
 
 -- Tabla de Reservaciones
 CREATE TABLE Reservations (
@@ -103,7 +109,7 @@ CREATE TABLE Reservations (
     DocumentId NVARCHAR(20),
     ClientType NVARCHAR(20) CHECK (ClientType IN ('natural', 'company')),
     Status NVARCHAR(20) CHECK (Status IN ('pending', 'confirmed', 'cancelled')) DEFAULT 'pending',
-    CreatedAt DATETIME DEFAULT GETDATE(),
+    createdAt DATETIMEOFFSET,
     CONSTRAINT FK_Reservations_Users FOREIGN KEY (UserId) REFERENCES Users(UserId)
 );
 
@@ -114,7 +120,7 @@ CREATE TABLE Notifications (
     Type NVARCHAR(50),
     Message NVARCHAR(MAX),
     ReadStatus BIT DEFAULT 0,
-    CreatedAt DATETIME DEFAULT GETDATE(),
+    createdAt DATETIMEOFFSET,
     CONSTRAINT FK_Notifications_Users FOREIGN KEY (UserId) REFERENCES Users(UserId)
 );
 
@@ -127,7 +133,7 @@ CREATE TABLE Coupons (
     ValidUntil DATE NOT NULL,
     MaxUses INT,
     UsedCount INT DEFAULT 0,
-    CreatedAt DATETIME DEFAULT GETDATE()
+    createdAt  DATETIMEOFFSET,
 );
 
 -- Tabla de Favoritos
@@ -135,10 +141,11 @@ CREATE TABLE Favorites (
     FavoriteId INT IDENTITY(1,1) PRIMARY KEY,
     UserId INT NOT NULL,
     EventId INT NOT NULL,
-    CreatedAt DATETIME DEFAULT GETDATE(),
+    createdAt  DATETIMEOFFSET,
     CONSTRAINT FK_Favorites_Users FOREIGN KEY (UserId) REFERENCES Users(UserId),
     CONSTRAINT FK_Favorites_Events FOREIGN KEY (EventId) REFERENCES Events(EventId)
 )
+
 
 -- Insertar registros en la tabla de Usuarios
 INSERT INTO Users (FullName, BirthDate, Phone, DNI, Email, PasswordHash, Role)

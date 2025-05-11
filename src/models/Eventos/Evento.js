@@ -44,7 +44,7 @@ const Event =sequelize.define( 'Event',{
     Capacity: DataTypes.INTEGER
 }, {
     tableName: 'Events',
-    timestamps: false
+    timestamps: true
 });
 
 export default Event;

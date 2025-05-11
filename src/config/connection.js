@@ -10,6 +10,7 @@ dotenv.config()
     {
         host: process.env.DB_HOST,
         dialect: 'mssql',
+        timezone: '-05:00',
         dialectOptions: {
             encrypt: process.env.DB_ENCRYPT === 'true',
             trustServerCertificate: process.env.DB_TRUST_CERT === 'true',
