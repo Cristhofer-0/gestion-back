@@ -27,7 +27,7 @@ const Ticket =sequelize.define( 'Ticket', {
 }, {
 
     tableName: 'Tickets',
-    timestamps: false,
+    timestamps: true,
 });
 
 export default Ticket;

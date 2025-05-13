@@ -1,14 +1,24 @@
 import Ticket from '../models/Ticket/Ticket.js';
+import Event from '../models/Eventos/Evento.js';
+
+Ticket.belongsTo(Event, { foreignKey: 'EventId' });
 
 export const getTickets = async (req, res) => {
     try {
-        const tickets = await Ticket.findAll();
+        const tickets = await Ticket.findAll({
+            include: {
+                model: Event,
+                attributes: ['Title'] // incluir solo el nombre del evento
+            }
+        });
         res.json(tickets);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error al obtener los tickets' });
     }
-}
+};
+
+
 
 export const getTicket = async (req, res) => {
     const ticketId = req.params.id;
@@ -17,16 +27,24 @@ export const getTicket = async (req, res) => {
     }
 
     try {
-        const ticket = await Ticket.findByPk(ticketId);
+        const ticket = await Ticket.findByPk(ticketId, {
+            include: {
+                model: Event,
+                attributes: ['Title']
+            }
+        });
+
         if (!ticket) {
             return res.status(404).json({ message: 'Ticket no encontrado' });
         }
+
         res.json(ticket);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error al obtener el ticket' });
     }
-}
+};
+
 
 export const createTicket = async (req, res) => {
     try {
