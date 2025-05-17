@@ -1,5 +1,7 @@
 import User from '../models/Usuario/Usuario.js';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+
 
 export const getUsuarios = async (req, res) => {
     try {
@@ -53,7 +55,6 @@ export const loginUsuario = async (req, res) => {
         if (!passwordMatch) {
             return res.status(401).json({ message: 'Contraseña incorrecta' });
         }
-
 
         const { PasswordHash, ...userWithoutPassword } = user.toJSON();
         res.json(userWithoutPassword);

@@ -26,7 +26,7 @@ export const enviarSolicitud = async (req, res) => {
         Email: ${email}
         Teléfono: ${telefono}
         Razón: ${razon}
-      `,
+      `.trim(),
     };
 
     await transporter.sendMail(mailOptions);
