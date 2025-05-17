@@ -161,7 +161,7 @@ INSERT INTO Events (OrganizerId, Title, Description, StartDate, EndDate, Address
 VALUES
 (2, 'Concierto de Rock', 'Un evento de música rock en vivo', '2025-06-10 18:00:00', '2025-06-10 22:00:00', 'Avenida Central 123, Ciudad', 40.7128, -74.0060, 'public', 'Música', 'https://example.com/banner1.jpg', 'https://example.com/video1.mp4', 'published', 500),
 (2, 'Conferencia de Tecnología', 'Charlas sobre innovación tecnológica', '2025-07-15 09:00:00', '2025-07-15 17:00:00', 'Calle de la Innovación 456, Ciudad', 40.7128, -74.0060, 'public', 'Tecnología', 'https://example.com/banner2.jpg', 'https://example.com/video2.mp4', 'draft', 200),
-(1, 'Feria de Emprendedores', 'Exposición de startups y nuevos negocios', '2025-08-01 10:00:00', '2025-08-01 18:00:00', 'Plaza Mayor, Ciudad', 40.7128, -74.0060, 'private', 'Negocios', 'https://example.com/banner3.jpg', 'https://example.com/video3.mp4', 'pending_approval', 300),
+(1, 'Feria de Emprendedores', 'Exposición de startups y nuevos negocios', '2025-08-01 10:00:00', '2025-08-01 18:00:00', 'Plaza Mayor, Ciudad', 40.7128, -74.0060, 'private', 'Negocios', 'https://example.com/banner3.jpg', 'https://example.com/video3.mp4', 'published', 300),
 (1, 'Festival de Cine', 'Muestra de películas independientes', '2025-09-05 19:00:00', '2025-09-05 23:00:00', 'Calle de las Artes 789, Ciudad', 40.7128, -74.0060, 'invite-only', 'Cine', 'https://example.com/banner4.jpg', 'https://example.com/video4.mp4', 'published', 150),
 (2, 'Exposición de Arte', 'Arte contemporáneo en la galería', '2025-05-25 17:00:00', '2025-05-25 21:00:00', 'Calle del Arte 321, Ciudad', 40.7128, -74.0060, 'public', 'Arte', 'https://example.com/banner5.jpg', 'https://example.com/video5.mp4', 'published', 100);
 
@@ -170,9 +170,9 @@ INSERT INTO Tickets (EventId, Type, Price, Description, StockAvailable)
 VALUES
 (1, 'General', 50.00, 'Entrada general al concierto', 500),
 (2, 'VIP', 100.00, 'Acceso a zona VIP', 100),
-(3, 'Expositor', 0.00, 'Entrada para expositores', 50),
+(3, 'General', 0.00, 'Entrada para expositores', 50),
 (4, 'General', 20.00, 'Entrada general al festival de cine', 150),
-(5, 'Normal', 10.00, 'Entrada a la exposición de arte', 100);
+(5, 'VIP', 10.00, 'Entrada a la exposición de arte', 100);
 
 -- Insertar registros en la tabla de Pedidos
 INSERT INTO Orders (UserId, EventId, TicketId, Quantity, TotalPrice, PaymentStatus)
