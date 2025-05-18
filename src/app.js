@@ -9,7 +9,7 @@ import ordersRoutes from './routes/orders.routes.js'
 import cuponesRoutes from './routes/coupons.routes.js'
 import favoritosRoutes from './routes/favorites.routes.js'
 import notificacionesRoutes from './routes/notifications.routes.js'
-import solicitudRoutes from './routes/solicitud.routes.js'
+import multimediaRoutes from "./routes/multimedia.routes.js"
 
 
 const app = express()
@@ -29,6 +29,6 @@ app.use(ordersRoutes)
 app.use(cuponesRoutes)
 app.use(favoritosRoutes)
 app.use(notificacionesRoutes)
-app.use(solicitudRoutes)
+app.use('/api/multimedia', multimediaRoutes); 
 
 export default app
