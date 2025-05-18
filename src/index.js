@@ -1,7 +1,7 @@
 import app from './app.js'
 import  sequelize  from './config/connection.js'
 import dotenv from 'dotenv';
-import multimediaRoutes from './routes/multimedia.routes.js';
+
 dotenv.config()
 
 await sequelize.authenticate()
