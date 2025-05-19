@@ -12,6 +12,8 @@ import notificacionesRoutes from './routes/notifications.routes.js'
 import multimediaRoutes from "./routes/multimedia.routes.js"
 import solicitudRoutes from './routes/solicitud.routes.js'
 
+import paymentRoutes  from './routes/payment.routes.js'
+
 
 const app = express()
 //PARA QUE CUALQUIER PUERTO PUEDA INGRESAR
@@ -32,5 +34,7 @@ app.use(favoritosRoutes)
 app.use(notificacionesRoutes)
 app.use('/api/multimedia', multimediaRoutes)
 app.use(solicitudRoutes)
+
+app.use(paymentRoutes)
 
 export default app
