@@ -1,18 +1,21 @@
-import {Router} from 'express'
-import { deleteUsuario, getUsuario, getUsuarios, updateUsuario, loginUsuario, registerUsuario} from '../controllers/usuarios.controllers.js'
+import { Router } from 'express'
+import { deleteUsuario, getUsuario, getUsuarios, updateUsuario, loginUsuario, registerUsuario, logoutUsuario, validarToken } from '../controllers/usuarios.controllers.js'
 
 const router = Router()
 
-router.get('/usuarios', getUsuarios)
+router.get('/usuarios', getUsuarios);
 
-router.get('/usuarios/:id', getUsuario)
+router.get('/usuarios/validar', validarToken);
 
-router.post('/usuarios/registrar', registerUsuario)
+// ⚠️ ESTAS DOS VAN PRIMERO
+router.post('/usuarios/login', loginUsuario);
+router.delete('/usuarios/logout', logoutUsuario);
 
-router.put('/usuarios/:id', updateUsuario)
+router.post('/usuarios/registrar', registerUsuario);
+router.get('/usuarios/:id', getUsuario);
+router.put('/usuarios/:id', updateUsuario);
+router.delete('/usuarios/:id', deleteUsuario);
 
-router.delete('/usuarios/:id', deleteUsuario)
 
-router.post('/usuarios/login', loginUsuario)
 
 export default router

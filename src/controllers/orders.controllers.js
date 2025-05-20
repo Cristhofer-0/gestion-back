@@ -76,3 +76,45 @@ export const deleteOrder = async (req, res) => {
         res.status(500).json({ message: 'Error al eliminar la orden' });
     }
 }
+
+
+export const crearOrderDelUsuario = async (req, res) => {
+    try {
+
+        const { userId, eventId, ticketId, quantity } = req.body;
+
+        // Validación básica
+        if (!userId || !eventId || !ticketId || !quantity) {
+            return res.status(400).json({ message: 'Faltan datos obligatorios.' });
+        }
+
+        const ticket = await Ticket.findByPk(ticketId);
+        if (!ticket) {
+            return res.status(404).json({ message: 'Ticket no encontrado.' });
+        }
+
+        const unitPrice = parseFloat(ticket.Price);
+        const totalPrice = unitPrice * quantity;
+
+        // Crear la orden
+        const nuevaOrden = await Order.create({
+            UserId: userId,
+            EventId: eventId,
+            TicketId: ticketId,
+            Quantity: quantity,
+            TotalPrice: totalPrice.toFixed(2),
+            PaymentStatus: 'pending'
+        });
+
+
+        res.status(201).json({
+            message: 'Orden creada exitosamente',
+            order: nuevaOrden
+        });
+    }
+    catch (error) {
+        console.error("Errror al crear la orden", error)
+        res.status(500).json({ message: 'Error interno del servidor' })
+    }
+
+}

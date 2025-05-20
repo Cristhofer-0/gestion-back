@@ -3,6 +3,27 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 
+
+const JWT_SECRET = process.env.JWT_SECRET
+
+
+const generarToken = (user) => {
+    return jwt.sign(
+        {
+            userId: user.UserId,
+            email: user.Email,
+            role: user.Role,
+            fullName: user.FullName,
+            verified: user.VerifiedOrganizer,
+        },
+        JWT_SECRET,
+        { expiresIn: '1h' }
+    );
+};
+
+
+
+
 export const getUsuarios = async (req, res) => {
     try {
         const users = await User.findAll();
@@ -31,6 +52,25 @@ export const getUsuario = async (req, res) => {
     }
 };
 
+
+export const validarToken = (req, res) => {
+    const token = req.cookies.tokenUsuario;
+
+    if (!token) {
+        return res.status(401).json({ message: 'No autenticado: token no encontrado' });
+    }
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        res.status(200).json({ message: 'Autenticado', user: decoded });
+    } catch (error) {
+        res.status(401).json({ message: 'Token inválido o expirado' });
+    }
+};
+
+
+
+// ✅ Inicio de sesión con JWT + Cookie
 export const loginUsuario = async (req, res) => {
     const { email, password } = req.body;
 
@@ -41,14 +81,11 @@ export const loginUsuario = async (req, res) => {
         }
 
         const hashedPassword = user.PasswordHash;
-
         let passwordMatch = false;
 
-        // Verifica si la contraseña está hasheada (bcrypt hashes typically start with $2)
         if (hashedPassword.startsWith('$2')) {
             passwordMatch = await bcrypt.compare(password, hashedPassword);
         } else {
-            // Contraseña en texto plano (caso antiguo o mal guardado)
             passwordMatch = password === hashedPassword;
         }
 
@@ -56,8 +93,22 @@ export const loginUsuario = async (req, res) => {
             return res.status(401).json({ message: 'Contraseña incorrecta' });
         }
 
+        const token = generarToken(user);
+
+        const isProduction = process.env.NODE_ENV === 'production';
+        res.cookie('tokenUsuario', token, {
+            httpOnly: true,
+            secure: isProduction, // true en producción (HTTPS)
+            sameSite:isProduction ? 'None' : 'Lax',
+            maxAge: 3600000,
+            path: '/',
+        });
+
         const { PasswordHash, ...userWithoutPassword } = user.toJSON();
-        res.json(userWithoutPassword);
+        res.json({
+            message: 'Inicio de sesión exitoso',
+            user: userWithoutPassword,
+        });
 
     } catch (error) {
         console.error(error);
@@ -65,10 +116,29 @@ export const loginUsuario = async (req, res) => {
     }
 };
 
+export const logoutUsuario = async (req, res) => {
+    const isProduction = process.env.NODE_ENV === 'production';
+    const token = req.cookies.tokenUsuario;
+
+    if (!token) {
+        console.log('No se encontro el token');
+    }
+
+    console.log('token: ', token);
+    res.clearCookie('tokenUsuario', {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction? 'None' : 'Lax',
+        path: '/',
+    });
+
+    res.json({ message: 'sesion cerrada correctamente' });
+};
+
 export const registerUsuario = async (req, res) => {
     try {
         const { Email, DNI, PasswordHash, ...userData } = req.body;
-        
+
         // Validar si el Email ya existe
         const existingEmail = await User.findOne({ where: { Email } });
         if (existingEmail) {
@@ -83,14 +153,14 @@ export const registerUsuario = async (req, res) => {
 
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(PasswordHash, saltRounds);
-    
+
         const user = await User.create({
             ...userData,
             Email,
             DNI,
             PasswordHash: hashedPassword
         });
-    
+
         const { PasswordHash: _, ...userWithoutPassword } = user.toJSON(); // excluye la contraseña
         res.status(201).json(userWithoutPassword);
     } catch (error) {
@@ -108,7 +178,7 @@ export const updateUsuario = async (req, res) => {
         // Verificar si se está actualizando la contraseña
         if (updateData.PasswordHash) {
             const looksHashed = typeof updateData.PasswordHash === 'string' &&
-                                updateData.PasswordHash.startsWith('$2b$');
+                updateData.PasswordHash.startsWith('$2b$');
 
             if (!looksHashed) {
                 const saltRounds = 10;

@@ -11,19 +11,24 @@ import favoritosRoutes from './routes/favorites.routes.js'
 import notificacionesRoutes from './routes/notifications.routes.js'
 import multimediaRoutes from "./routes/multimedia.routes.js"
 import solicitudRoutes from './routes/solicitud.routes.js'
-
 import paymentRoutes  from './routes/payment.routes.js'
+
+import cookieParser from 'cookie-parser'
 
 
 const app = express()
 //PARA QUE CUALQUIER PUERTO PUEDA INGRESAR
 app.use(cors({
-    origin: '*',
+    origin: 'http://localhost:3001',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 }));
 
+
 app.use(express.json())
+
+app.use(cookieParser())
+
 app.use(eventosRoutes)
 app.use(usuariosRoutes)
 app.use(ticketsRoutes)
@@ -34,6 +39,7 @@ app.use(favoritosRoutes)
 app.use(notificacionesRoutes)
 app.use('/api/multimedia', multimediaRoutes)
 app.use(solicitudRoutes)
+
 
 app.use(paymentRoutes)
 

@@ -1,5 +1,6 @@
 import stripe from '../config/stripe.js'
 
+
 export const createSession =  async  (req, res) =>{
   const session = await stripe.checkout.sessions.create({
     line_items:[
@@ -11,7 +12,6 @@ export const createSession =  async  (req, res) =>{
           },
           currency: 'pen',
           unit_amount: 200000 //2000.00
-
         },
         quantity: 1
       },
