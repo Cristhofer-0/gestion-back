@@ -21,9 +21,6 @@ const generarToken = (user) => {
     );
 };
 
-
-
-
 export const getUsuarios = async (req, res) => {
     try {
         const users = await User.findAll();
