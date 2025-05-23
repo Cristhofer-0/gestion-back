@@ -2,10 +2,7 @@ import User from '../models/Usuario/Usuario.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-
-
 const JWT_SECRET = process.env.JWT_SECRET
-
 
 const generarToken = (user) => {
     return jwt.sign(
@@ -121,7 +118,6 @@ export const logoutUsuario = async (req, res) => {
         console.log('No se encontro el token');
     }
 
-    console.log('token: ', token);
     res.clearCookie('tokenUsuario', {
         httpOnly: true,
         secure: isProduction,

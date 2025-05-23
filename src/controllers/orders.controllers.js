@@ -1,8 +1,5 @@
-import jwt from 'jsonwebtoken';
 import Ticket from '../models/Ticket/Ticket.js';
 import Order from '../models/Order/Order.js';
-
-const JWT_SECRET = process.env.JWT_SECRET;
 
 export const getOrders = async (req, res) => {
     try {
@@ -81,44 +78,49 @@ export const deleteOrder = async (req, res) => {
     }
 }
 
+//ELIMINAR DEL CARRITO EL PRODUCTO
+export const eliminarDelCarrito = async (req, res) => {
+    try {
+        const userId = req.user.userId;  // viene del middleware
+        const { eventoId } = req.body;
 
+        const deletedRows = await Order.destroy({
+            where: {
+                UserId: userId,
+                EventId: eventoId,
+                PaymentStatus: "pending",
+            },
+        });
+
+        if (deletedRows === 0) {
+            return res.status(404).json({ message: 'Producto no encontrado en carrito' });
+        }
+
+        res.json({ message: 'Producto eliminado del carrito correctamente' });
+    } catch (error) {
+        console.error("Este es el error: " + error);
+        res.status(500).json({ message: 'Error al eliminar del carrito' });
+    }
+};
+//AGREGAR EL PRODUCTO AL CARRITO
 export const crearOrderDelUsuario = async (req, res) => {
     try {
-        // 🔒 Verifica que haya token en cookies
-        const token = req.cookies?.tokenUsuario;
-        if (!token) {
-            return res.status(401).json({ message: 'No autorizado. Token no encontrado.' });
-        }
+        const userId = req.user.userId; // viene del middleware
 
-        // 🔑 Verifica y decodifica el token
-        let decoded;
-        try {
-            decoded = jwt.verify(token, JWT_SECRET);
-        } catch (err) {
-            return res.status(401).json({ message: 'Token inválido o expirado.' });
-        }
-
-        const userId = decoded.userId;
-
-        // 🧾 Extrae datos del body
-        const { eventId, ticketId, quantity} = req.body;
+        const { eventId, ticketId, quantity } = req.body;
 
         if (!eventId || !ticketId || !quantity) {
             return res.status(400).json({ message: 'Faltan datos obligatorios (eventId, ticketId o quantity).' });
         }
 
-        // 🎫 Validación del ticket
         const ticket = await Ticket.findByPk(ticketId);
         if (!ticket) {
             return res.status(404).json({ message: 'Ticket no encontrado.' });
         }
 
-        // 💰 Cálculo del precio
         const unitPrice = parseFloat(ticket.Price);
-
         const totalPrice = unitPrice * quantity;
 
-        // 🧾 Crear la orden
         const nuevaOrden = await Order.create({
             UserId: userId,
             EventId: eventId,
@@ -126,8 +128,8 @@ export const crearOrderDelUsuario = async (req, res) => {
             Quantity: quantity,
             TotalPrice: totalPrice.toFixed(2),
             PaymentStatus: 'pending',
-            CouponCode:null,
-            DiscountPercentage:null,
+            CouponCode: null,
+            DiscountPercentage: null,
             TicketPdfUrl: null,
             QrCodeUrl: null
         });
@@ -143,26 +145,34 @@ export const crearOrderDelUsuario = async (req, res) => {
     }
 };
 
-
-export const verEventosSeleccionados = async (req,res) =>{
+//HISTORIAL COMPRAS
+export const historialCompras = async (req, res) => {
     try {
-        // 🔒 Verifica que haya token en cookies
-        const token = req.cookies?.tokenUsuario;
-        if (!token) {
-            return res.status(401).json({ message: 'No autorizado. Token no encontrado.' });
-        }
+        const userId = req.user.userId; // viene del middleware
 
-        // 🔑 Verifica y decodifica el token
-        let decoded;
-        try {
-            decoded = jwt.verify(token, JWT_SECRET);
-        } catch (err) {
-            return res.status(401).json({ message: 'Token inválido o expirado.' });
-        }
+        const ordenesPagadas = await Order.findAll({
+            where: {
+                UserId: userId,
+                PaymentStatus: 'paid'
+            }
+        });
 
-        const userId = decoded.userId;
+        res.status(200).json({
+            message: 'Órdenes pagadas encontradas',
+            ordenes: ordenesPagadas
+        });
 
-        // 📦 Buscar órdenes con estado pendiente
+    } catch (error) {
+        console.error("Error al obtener órdenes pagadas:", error);
+        res.status(500).json({ message: 'Error interno del servidor' });
+    }
+};
+
+// Ver eventos seleccionados (carrito)
+export const verEventosSeleccionados = async (req, res) => {
+    try {
+        const userId = req.user.userId; // viene del middleware
+
         const ordenesPendientes = await Order.findAll({
             where: {
                 UserId: userId,
@@ -179,31 +189,18 @@ export const verEventosSeleccionados = async (req,res) =>{
         console.error("Error al obtener órdenes pendientes:", error);
         res.status(500).json({ message: 'Error interno del servidor' });
     }
-}
+};
 
+//EDITAR CANTIDAD DE LOS BOLETOS
 export const editarCantidadOrden = async (req, res) => {
     try {
-        // 🔒 Verifica token
-        const token = req.cookies?.tokenUsuario;
-        if (!token) {
-            return res.status(401).json({ message: 'No autorizado. Token no encontrado.' });
-        }
-
-        let decoded;
-        try {
-            decoded = jwt.verify(token, JWT_SECRET);
-        } catch (err) {
-            return res.status(401).json({ message: 'Token inválido o expirado.' });
-        }
-
-        const userId = decoded.userId;
+        const userId = req.user.userId; // viene del middleware
         const { orderId, newQuantity } = req.body;
 
         if (!orderId || !newQuantity || newQuantity <= 0) {
             return res.status(400).json({ message: 'Se requiere orderId y newQuantity válida.' });
         }
 
-        // 🔍 Buscar la orden
         const orden = await Order.findOne({
             where: {
                 OrderId: orderId,
@@ -216,7 +213,6 @@ export const editarCantidadOrden = async (req, res) => {
             return res.status(404).json({ message: 'Orden no encontrada o no editable.' });
         }
 
-        // 💸 Obtener el precio del ticket
         const ticket = await Ticket.findByPk(orden.TicketId);
         if (!ticket) {
             return res.status(404).json({ message: 'Ticket asociado no encontrado.' });
@@ -225,7 +221,6 @@ export const editarCantidadOrden = async (req, res) => {
         const unitPrice = parseFloat(ticket.Price);
         const nuevoTotal = unitPrice * newQuantity;
 
-        // ✏️ Actualizar la orden
         orden.Quantity = newQuantity;
         orden.TotalPrice = nuevoTotal.toFixed(2);
         await orden.save();
