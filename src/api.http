@@ -40,6 +40,9 @@ GET http://localhost:3000/tickets
 ### obteniendo un ticket
 GET http://localhost:3000/tickets/1
 
+### obteniendo un ticket por evento
+http://localhost:3000/tickets?eventoId=1
+
 ### creando un ticket
 POST http://localhost:3000/tickets
 

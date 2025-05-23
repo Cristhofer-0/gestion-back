@@ -18,10 +18,19 @@ import cookieParser from 'cookie-parser'
 
 const app = express()
 //PARA QUE CUALQUIER PUERTO PUEDA INGRESAR
+const allowedOrigins = ['http://localhost:3001', 'http://localhost:3002'];
+
 app.use(cors({
-    origin: 'http://localhost:3001',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true,
+  origin: function (origin, callback) {
+    // Permitir solicitudes sin origen (como en postman o curl) o si está en la lista
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
 }));
 
 

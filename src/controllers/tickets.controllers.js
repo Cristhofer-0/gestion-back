@@ -4,20 +4,25 @@ import Event from '../models/Eventos/Evento.js';
 Ticket.belongsTo(Event, { foreignKey: 'EventId' });
 
 export const getTickets = async (req, res) => {
-    try {
-        const tickets = await Ticket.findAll({
-            include: {
-                model: Event,
-                attributes: ['Title'] // incluir solo el nombre del evento
-            }
-        });
-        res.json(tickets);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error al obtener los tickets' });
-    }
-};
+  const { eventoId } = req.query;
 
+  try {
+    const whereCondition = eventoId ? { EventId: eventoId } : undefined;
+
+    const tickets = await Ticket.findAll({
+      where: whereCondition,
+      include: {
+        model: Event,
+        attributes: ['Title']
+      }
+    });
+
+    res.json(tickets);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error al obtener los tickets' });
+  }
+};
 
 
 export const getTicket = async (req, res) => {
@@ -94,3 +99,4 @@ export const deleteTicket = async (req, res) => {
         res.status(500).json({ message: 'Error al eliminar el ticket' });
     }
 }
+
