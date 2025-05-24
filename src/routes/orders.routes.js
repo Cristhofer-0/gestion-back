@@ -1,20 +1,33 @@
-import {Router} from 'express'
-import {createOrder, updateOrder, getOrders, getOrder, deleteOrder, crearOrderDelUsuario, verEventosSeleccionados} from '../controllers/orders.controllers.js'
+import { Router } from 'express';
+import {
+  createOrder,
+  updateOrder,
+  getOrders,
+  getOrder,
+  deleteOrder,
+  crearOrderDelUsuario,
+  verEventosSeleccionados,
+  historialCompras,
+  eliminarDelCarrito,
+  editarCantidadOrden
+} from '../controllers/orders.controllers.js';
 
-const router = Router()
+import { verifyTokenUsuario } from '../middlewares/authUsuario.js';
 
-router.get('/orders', getOrders)
+const router = Router();
 
-router.get('/orders/:id', getOrder)
+// Rutas públicas (sin token)
+router.get('/orders', getOrders);
+router.get('/orders/:id', getOrder);
+router.post('/orders', createOrder);
+router.put('/orders/:id', updateOrder);
+router.delete('/orders/:id', deleteOrder);
 
-router.post('/orders/pendientes', verEventosSeleccionados)
+// Rutas protegidas (requieren token del usuario)
+router.post('/orders/crear', verifyTokenUsuario, crearOrderDelUsuario);
+router.post('/orders/carrito', verifyTokenUsuario, verEventosSeleccionados);
+router.delete('/orders/eliminar', verifyTokenUsuario, eliminarDelCarrito);
+router.post('/orders/historial', verifyTokenUsuario, historialCompras);
+router.put('/orders/editar-cantidad', verifyTokenUsuario, editarCantidadOrden);
 
-router.post('/orders', createOrder)
-
-router.post('/orders/crear', crearOrderDelUsuario)
-
-router.put('/orders/:id', updateOrder)
-
-router.delete('/orders/:id', deleteOrder)
-
-export default router
+export default router;
