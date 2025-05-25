@@ -40,7 +40,7 @@ const Order = sequelize.define('Order', {
   QrCodeUrl: DataTypes.STRING,
   OrderDate: {                    // <--- agregar esta línea
     type: DataTypes.DATE,
-    allowNull: false              // o true si puede ser nullable
+    allowNull: true,             // o true si puede ser nullable
   }
 }, {
   tableName: 'Orders',
