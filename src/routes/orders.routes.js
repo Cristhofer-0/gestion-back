@@ -5,11 +5,11 @@ import {
   getOrders,
   getOrder,
   deleteOrder,
-  crearOrderDelUsuario,
   verEventosSeleccionados,
   historialCompras,
   eliminarDelCarrito,
-  editarCantidadOrden
+  editarCantidadOrden,
+  crearOrdenCompleta
 } from '../controllers/orders.controllers.js';
 
 import { verifyTokenUsuario } from '../middlewares/authUsuario.js';
@@ -24,10 +24,12 @@ router.put('/orders/:id', updateOrder);
 router.delete('/orders/:id', deleteOrder);
 
 // Rutas protegidas (requieren token del usuario)
-router.post('/orders/crear', verifyTokenUsuario, crearOrderDelUsuario);
 router.post('/orders/carrito', verifyTokenUsuario, verEventosSeleccionados);
+router.post('/orders/agregar', verifyTokenUsuario, crearOrdenCompleta);
 router.delete('/orders/eliminar', verifyTokenUsuario, eliminarDelCarrito);
+
 router.post('/orders/historial', verifyTokenUsuario, historialCompras);
+
 router.put('/orders/editar-cantidad', verifyTokenUsuario, editarCantidadOrden);
 
 export default router;
