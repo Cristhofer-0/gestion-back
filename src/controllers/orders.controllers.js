@@ -135,12 +135,12 @@ export const crearOrdenCompleta = async (req, res) => {
 export const eliminarDelCarrito = async (req, res) => {
     try {
         const userId = req.user.userId;  // viene del middleware
-        const { eventoId } = req.body;
+        const { orderId } = req.body;
 
         const deletedRows = await Order.destroy({
             where: {
                 UserId: userId,
-                EventId: eventoId,
+                OrderId: orderId,
                 PaymentStatus: "pending",
             },
         });

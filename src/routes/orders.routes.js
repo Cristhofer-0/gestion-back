@@ -26,7 +26,7 @@ router.delete('/orders/:id', deleteOrder);
 // Rutas protegidas (requieren token del usuario)
 router.post('/orders/carrito', verifyTokenUsuario, verEventosSeleccionados);
 router.post('/orders/agregar', verifyTokenUsuario, crearOrdenCompleta);
-router.delete('/orders/eliminar', verifyTokenUsuario, eliminarDelCarrito);
+router.post('/orders/eliminar', verifyTokenUsuario, eliminarDelCarrito);
 
 router.post('/orders/historial', verifyTokenUsuario, historialCompras);
 
