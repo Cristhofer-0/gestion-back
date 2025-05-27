@@ -34,10 +34,6 @@ const Order = sequelize.define('Order', {
     type: DataTypes.ENUM('paid', 'pending', 'refunded'),
     allowNull: false
   },
-  CouponCode: DataTypes.STRING(50),
-  DiscountPercentage: DataTypes.DECIMAL(5, 2),
-  TicketPdfUrl: DataTypes.STRING,
-  QrCodeUrl: DataTypes.STRING,
   OrderDate: {                    // <--- agregar esta línea
     type: DataTypes.DATE,
     allowNull: true,             // o true si puede ser nullable
