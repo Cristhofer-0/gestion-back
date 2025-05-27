@@ -4,6 +4,7 @@ import Order from '../models/Order/Order.js';
 import Ticket from '../models/Ticket/Ticket.js';
 import Event from '../models/Eventos/Evento.js';
 
+//MODELO DE PRUEBAS
 export const createSession =  async  (req, res) =>{
   const session = await stripe.checkout.sessions.create({
     line_items:[
@@ -88,7 +89,7 @@ export const createSessionFromPendingOrders = async (req, res) => {
         unit_amount: Math.round(parseFloat(order.Ticket.Price) * 100), // a centavos
         product_data: {
           name: `Entrada: ${order.Event.Title}`,
-          description: `Ticket ID: ${order.TicketId}`
+          description: `Ticket ID: ${order.TicketId}`,
         }
       },
       quantity: order.Quantity
@@ -110,71 +111,40 @@ export const createSessionFromPendingOrders = async (req, res) => {
   }
 };
 
-
-
-
-export const createPaymentIntent = async (req, res) => {
+export const ordenPagada = async(req,res) =>{
   try {
-    const { amount } = req.body
+    // 🔐 Verifica y decodifica el token para obtener el UserId
+    const token = req.cookies?.tokenUsuario;
+    if (!token) {
+      return res.status(401).json({ message: 'No autorizado. Token no encontrado.' });
+    }
 
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount,
-      currency: 'pen',
-      payment_method_types: ['card'],
-    })
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      return res.status(401).json({ message: 'Token inválido o expirado.' });
+    }
 
-    res.status(200).json({ clientSecret: paymentIntent.client_secret })
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
-}
+    const userId = decoded.userId;
 
-
-export const payWithCardData = async (req, res) => {
-  try {
-    const { card, amount } = req.body
-    // card: { number, exp_month, exp_year, cvc }
-
-    // 1. Crear método de pago con los datos de la tarjeta
-    const paymentMethod = await stripe.paymentMethods.create({
-      type: 'card',
-      card: {
-        number: card.number,
-        exp_month: card.exp_month,
-        exp_year: card.exp_year,
-        cvc: card.cvc,
-      },
+    // 🔎 Busca las órdenes pendientes del usuario
+    const orders = await Order.findAll({
+      where: { UserId: userId, PaymentStatus: 'pending' }
     });
 
-    // 2. Crear y confirmar el pago
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: amount * 100, // el monto debe estar en centavos
-      currency: 'pen',
-      payment_method: paymentMethod.id,
-      confirm: true,
-    });
+    // 🔄 Actualiza a 'paid'
+    await Promise.all(
+      orders.map(order => order.update({ PaymentStatus: 'paid' }))
+    );
 
-    res.status(200).json({ success: true, paymentIntent });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.log(`Órdenes de ${userId} actualizadas a "paid".`);
+    // 🔁 Redirige a la página final de éxito (en Next.js)
+    return res.redirect("http://localhost:3001/carrito?status=paid");
+  } catch (err) {
+    console.error('Error al actualizar el estado de pago:', err);
+    return res.status(500).json({ message: 'Error al actualizar el estado de pago.' });
   }
-}
-
-
-export const createPayment = async (payment_method_id) => {
-  try {
-    const payment = await stripe.paymentIntents.create({
-      amount: 5 * 100,
-      currency: 'pen',
-      payment_method: payment_method_id,
-      confirm: true
-    });
-    console.log("Pago con ID " + payment.id + " realizado correctamente");
-    return payment;
-  } catch (error) {
-    console.error("Error al realizar el pago:", error.message);
-    throw error;
-  }
-}
+};
 
 
