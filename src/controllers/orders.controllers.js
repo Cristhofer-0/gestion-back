@@ -1,6 +1,7 @@
 import Ticket from '../models/Ticket/Ticket.js';
 import Order from '../models/Order/Order.js';
 import Event from '../models/Eventos/Evento.js';
+import User from '../models/Usuario/Usuario.js'; // Asegúrate de que el modelo Usuario esté correctamente importado
 
 export const getOrders = async (req, res) => {
     try {
@@ -22,12 +23,17 @@ export const getOrder = async (req, res) => {
         const order = await Order.findByPk(orderId, {
             include: [
                 {
-                model: Event // sin `attributes`, trae todo
+                    model: Event
                 },
                 {
-                model: Ticket
+                    model: Ticket
+                },
+                {
+                    model: User,
+                    attributes: ['UserId', 'FullName', 'DNI'] // Asegúrate de incluir solo los campos necesarios
                 }
             ]
+
         });
 
         if (!order) {

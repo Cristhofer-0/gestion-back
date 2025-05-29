@@ -3,6 +3,7 @@ import sequelize from '../../config/connection.js';
 
 import Event from '../Eventos/Evento.js';
 import Ticket from '../Ticket/Ticket.js';
+import User from '../Usuario/Usuario.js';
 
 const Order = sequelize.define('Order', {
   OrderId: {
@@ -47,5 +48,6 @@ const Order = sequelize.define('Order', {
 // 📎 Asociaciones necesarias
 Order.belongsTo(Event, { foreignKey: 'EventId' });
 Order.belongsTo(Ticket, { foreignKey: 'TicketId' });
+Order.belongsTo(User, { foreignKey: 'UserId' });
 
 export default Order;
