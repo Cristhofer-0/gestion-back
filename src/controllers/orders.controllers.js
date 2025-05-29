@@ -19,7 +19,17 @@ export const getOrder = async (req, res) => {
     }
 
     try {
-        const order = await Order.findByPk(orderId);
+        const order = await Order.findByPk(orderId, {
+            include: [
+                {
+                model: Event // sin `attributes`, trae todo
+                },
+                {
+                model: Ticket
+                }
+            ]
+        });
+
         if (!order) {
             return res.status(404).json({ message: 'Orden no encontrado' });
         }
