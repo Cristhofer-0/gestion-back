@@ -111,9 +111,8 @@ export const createSessionFromPendingOrders = async (req, res) => {
   }
 };
 
-export const ordenPagada = async(req,res) =>{
+export const ordenPagada = async (req, res) => {
   try {
-    // 🔐 Verifica y decodifica el token para obtener el UserId
     const token = req.cookies?.tokenUsuario;
     if (!token) {
       return res.status(401).json({ message: 'No autorizado. Token no encontrado.' });
@@ -128,23 +127,49 @@ export const ordenPagada = async(req,res) =>{
 
     const userId = decoded.userId;
 
-    // 🔎 Busca las órdenes pendientes del usuario
+    // 🔎 Busca las órdenes pendientes del usuario con Ticket incluido
     const orders = await Order.findAll({
-      where: { UserId: userId, PaymentStatus: 'pending' }
+      where: { UserId: userId, PaymentStatus: 'pending' },
+      include: [
+        {
+          model: Ticket,
+          attributes: ['TicketId', 'StockAvailable']  // Asegúrate de incluir StockAvailable
+        }
+      ]
     });
 
-    // 🔄 Actualiza a 'paid'
+    if (!orders.length) {
+      return res.status(400).json({ message: 'No hay órdenes pendientes.' });
+    }
+
+    // 🔄 Actualiza stock y estado de las órdenes
     await Promise.all(
-      orders.map(order => order.update({ PaymentStatus: 'paid' }))
+      orders.map(async (order) => {
+        // Reducir stock del ticket
+        const ticket = order.Ticket;
+        if (ticket) {
+          const nuevoStock = ticket.StockAvailable - order.Quantity;
+          if (nuevoStock < 0) {
+            // Si no hay suficiente stock, puedes lanzar un error o dejarlo en 0
+            console.warn(`Stock insuficiente para el ticket ID ${ticket.TicketId}.`);
+            ticket.StockAvailable = 0;
+          } else {
+            ticket.StockAvailable = nuevoStock;
+          }
+          await ticket.save();
+        }
+
+        // Actualizar estado del pedido a 'paid'
+        await order.update({ PaymentStatus: 'paid' });
+      })
     );
 
-    console.log(`Órdenes de ${userId} actualizadas a "paid".`);
-    // 🔁 Redirige a la página final de éxito (en Next.js)
+    console.log(`Órdenes de ${userId} actualizadas a "paid" y stock actualizado.`);
+
     return res.redirect("http://localhost:3001/carrito?status=paid");
   } catch (err) {
     console.error('Error al actualizar el estado de pago:', err);
     return res.status(500).json({ message: 'Error al actualizar el estado de pago.' });
   }
 };
-
 
