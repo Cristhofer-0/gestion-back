@@ -75,3 +75,24 @@ export const deleteEvento = async (req, res) => {
         res.status(500).json({ message: 'Error al eliminar el evento' });
     }
 }
+
+export const getEventosByOrganizador = async (req, res) => {
+    const organizadorId = req.params.organizadorId;
+
+    if (!organizadorId) {
+        return res.status(400).json({ message: 'organizadorId es requerido' });
+    }
+
+    try {
+        // Suponiendo que tu modelo tiene un campo OrganizerId o similar
+        const eventos = await Evento.findAll({
+            where: { OrganizerId: organizadorId }
+        });
+
+        res.json(eventos);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener los eventos del organizador' });
+    }
+};
+

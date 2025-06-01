@@ -100,3 +100,25 @@ export const deleteTicket = async (req, res) => {
     }
 }
 
+export const getTicketsByOrganizador = async (req, res) => {
+    const organizadorId = req.params.organizadorId;
+
+    if (!organizadorId) {
+        return res.status(400).json({ message: 'organizadorId es requerido' });
+    }
+
+    try {
+        const tickets = await Ticket.findAll({
+            include: [{
+                model: Event,
+                where: { OrganizerId: organizadorId }, // Aquí filtramos por el UserId del organizador
+                attributes: ['EventId', 'Title', 'OrganizerId'] // Incluimos datos del evento opcionalmente
+            }]
+        });
+
+        res.json(tickets);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener los tickets del organizador' });
+    }
+};

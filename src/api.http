@@ -15,6 +15,9 @@ PUT http://localhost:3000/eventos/1
 ### eliminando un evento
 DELETE http://localhost:3000/eventos/7
 
+### obteniendo todos los eventos por organizador
+GET http://localhost:3000/eventos/organizador/1
+
 
 ### obteniendo todos los usuario
 GET http://localhost:3000/usuarios
@@ -51,6 +54,9 @@ PUT http://localhost:3000/tickets/1
 
 ### eliminando un ticket
 DELETE http://localhost:3000/tickets/7
+
+### obteniendo todos los tickets por evento y organizador
+GET http://localhost:3000/tickets/organizador/1
 
 
 ### obteniendo todos los review
