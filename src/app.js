@@ -11,6 +11,7 @@ import favoritosRoutes from './routes/favorites.routes.js'
 import notificacionesRoutes from './routes/notifications.routes.js'
 import multimediaRoutes from "./routes/multimedia.routes.js"
 import solicitudRoutes from './routes/solicitud.routes.js'
+import ayudaRoutes from './routes/ayuda.routes.js'
 import paymentRoutes  from './routes/payment.routes.js'
 
 import cookieParser from 'cookie-parser'
@@ -48,6 +49,7 @@ app.use(favoritosRoutes)
 app.use(notificacionesRoutes)
 app.use('/api/multimedia', multimediaRoutes)
 app.use(solicitudRoutes)
+app.use(ayudaRoutes)
 
 
 app.use(paymentRoutes)
