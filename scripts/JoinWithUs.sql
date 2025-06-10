@@ -14,7 +14,7 @@ CREATE TABLE Users (
     DNI NVARCHAR(20) NOT NULL UNIQUE,
     Email NVARCHAR(100) NOT NULL UNIQUE,
     PasswordHash NVARCHAR(255) NOT NULL,
-    Role NVARCHAR(20) CHECK (Role IN ('user', 'organizer', 'admin')) NOT NULL,
+    Role NVARCHAR(20) CHECK (Role IN ('user', 'organizer', 'admin', 'helper')) NOT NULL,
     VerifiedOrganizer BIT DEFAULT 0,
     CreatedAt DATETIME DEFAULT GETDATE(),
     UpdatedAt DATETIME DEFAULT GETDATE()

@@ -4,14 +4,35 @@ import Event from '../models/Eventos/Evento.js';
 import User from '../models/Usuario/Usuario.js'; // Asegúrate de que el modelo Usuario esté correctamente importado
 
 export const getOrders = async (req, res) => {
+    const { userId } = req.query;
+
+    // Validar si userId está presente y es un número
+    if (userId && isNaN(userId)) {
+        return res.status(400).json({ message: 'UserId inválido' });
+    }
+
     try {
-        const orders = await Order.findAll();
+        const whereCondition = userId ? { UserId: userId } : undefined;
+
+        const orders = await Order.findAll({
+            where: whereCondition,
+            include: [
+                { model: Event },
+                { model: Ticket },
+                {
+                    model: User,
+                    attributes: ['UserId', 'FullName', 'DNI']
+                }
+            ]
+        });
+
         res.json(orders);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Error al obtener los orders' });
+        res.status(500).json({ message: 'Error al obtener las órdenes' });
     }
-}
+};
+
 
 export const getOrder = async (req, res) => {
     const orderId = req.params.id;
