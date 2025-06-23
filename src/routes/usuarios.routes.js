@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { deleteUsuario, getUsuario, getUsuarios, updateUsuario, loginUsuario, registerUsuario, logoutUsuario, validarToken } from '../controllers/usuarios.controllers.js'
+import { deleteUsuario, getUsuario, getUsuarios, updateUsuario, loginUsuario, registerUsuario, logoutUsuario, validarToken, cambiarPassword } from '../controllers/usuarios.controllers.js'
 
 const router = Router()
 
@@ -15,6 +15,7 @@ router.post('/usuarios/registrar', registerUsuario);
 router.get('/usuarios/:id', getUsuario);
 router.put('/usuarios/:id', updateUsuario);
 router.delete('/usuarios/:id', deleteUsuario);
+router.put("/usuarios/:id/cambiar-password", cambiarPassword)
 
 
 
