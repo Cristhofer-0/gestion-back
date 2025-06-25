@@ -2,6 +2,7 @@ import User from '../models/Usuario/Usuario.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+
 const JWT_SECRET = process.env.JWT_SECRET
 
 const generarToken = (user) => {
@@ -212,3 +213,30 @@ export const deleteUsuario = async (req, res) => {
         res.status(500).json({ message: 'Error al eliminar el usuario' });
     }
 };
+
+export const cambiarPassword = async (req, res) => {
+  const { id } = req.params
+  const { currentPassword, newPassword } = req.body
+
+  try {
+    const user = await User.findByPk(id)
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" })
+    }
+
+    const match = await bcrypt.compare(currentPassword, user.PasswordHash)
+    if (!match) {
+      return res.status(400).json({ message: "La contraseña actual es incorrecta" })
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10)
+    user.PasswordHash = hashedNewPassword
+    await user.save()
+
+    return res.status(200).json({ message: "Contraseña actualizada correctamente" })
+  } catch (error) {
+    console.error("Error al cambiar contraseña:", error)
+    return res.status(500).json({ message: "Error del servidor" })
+  }
+}

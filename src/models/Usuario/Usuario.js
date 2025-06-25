@@ -39,11 +39,6 @@ const User = sequelize.define('User', {
 	Role: {
 		type: DataTypes.ENUM('user', 'organizer', 'admin'),
 		allowNull: false,
-	},
-	VerifiedOrganizer: {
-		type: DataTypes.BOOLEAN,
-		allowNull: false,
-		defaultValue: false,
 	}
 }, {
 	tableName: 'Users',
