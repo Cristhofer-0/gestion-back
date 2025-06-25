@@ -13,6 +13,7 @@ import multimediaRoutes from "./routes/multimedia.routes.js"
 import solicitudRoutes from './routes/solicitud.routes.js'
 import ayudaRoutes from './routes/ayuda.routes.js'
 import paymentRoutes  from './routes/payment.routes.js'
+import dashboardRoutes from './routes/dashboard.routes.js'
 
 import cookieParser from 'cookie-parser'
 
@@ -50,6 +51,8 @@ app.use(notificacionesRoutes)
 app.use('/api/multimedia', multimediaRoutes)
 app.use(solicitudRoutes)
 app.use(ayudaRoutes)
+app.use(dashboardRoutes)
+
 
 
 app.use(paymentRoutes)
