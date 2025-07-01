@@ -32,7 +32,7 @@ const Order = sequelize.define('Order', {
     allowNull: false
   },
   PaymentStatus: {
-    type: DataTypes.ENUM('paid', 'pending', 'refunded'),
+    type: DataTypes.ENUM('paid', 'pending'),
     allowNull: false
   },
   OrderDate: {                    // <--- agregar esta línea
