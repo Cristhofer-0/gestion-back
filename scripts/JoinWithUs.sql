@@ -67,11 +67,7 @@ CREATE TABLE Orders (
     Quantity INT NOT NULL,
     TotalPrice DECIMAL(10,2) NOT NULL,
     PaymentStatus NVARCHAR(20) CHECK (PaymentStatus IN ('paid', 'pending', 'refunded')) NOT NULL,
-    CouponCode NVARCHAR(50),
-    DiscountPercentage DECIMAL(5,2),
     OrderDate DATETIME DEFAULT GETDATE(),
-    TicketPdfUrl NVARCHAR(255),
-    QrCodeUrl NVARCHAR(255),
     CONSTRAINT FK_Orders_Users FOREIGN KEY (UserId) REFERENCES Users(UserId),
     CONSTRAINT FK_Orders_Events FOREIGN KEY (EventId) REFERENCES Events(EventId),
     CONSTRAINT FK_Orders_Tickets FOREIGN KEY (TicketId) REFERENCES Tickets(TicketId)

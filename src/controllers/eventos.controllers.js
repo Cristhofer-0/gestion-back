@@ -50,12 +50,21 @@ export const updateEvento = async (req, res) => {
             return res.status(404).json({ message: 'Evento no encontrado o sin cambios' });
         }
 
+        // 🔍 Obtener el nombre actualizado del evento
+        const eventoActualizado = await Evento.findByPk(eventoId);
+
+        // ✅ Emitir nombre en la notificación
+        global.io.emit('evento_modificado', {
+            id: eventoActualizado?.EventId,
+            nombre: eventoActualizado?.Title || 'Evento',
+            mensaje: 'Este evento ha sido modificado',
+        });
+
         res.json({ message: 'Evento actualizado correctamente' });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error al actualizar el evento' });
+        res.status(500).json({ message: 'Error al actualizar evento', error });
     }
-}
+};
 
 export const deleteEvento = async (req, res) => {
     const eventoId = req.params.id;
