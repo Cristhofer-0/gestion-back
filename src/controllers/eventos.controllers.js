@@ -1,14 +1,35 @@
 import Evento from '../models/Eventos/Evento.js';
 
 export const getEventos = async (req, res) => {
-    try {
-        const eventos = await Evento.findAll();
-        res.json(eventos);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error al obtener los eventos' });
-    }
-}
+  try {
+    const eventos = await Evento.findAll();
+    const hoy = new Date();
+
+    await Promise.all(
+      eventos.map(async (evento) => {
+        try {
+          const fechaFin = new Date(evento.EndDate);
+
+          if (!fechaFin || isNaN(fechaFin)) return;
+
+          if (fechaFin < hoy && evento.Status === 'published') {
+            evento.Status = 'draft';
+            await evento.save();
+          }
+        } catch (innerError) {
+          console.error("Error al actualizar estado del evento:", innerError);
+        }
+      })
+    );
+
+    res.json(eventos);
+  } catch (error) {
+    console.error("Error general en getEventos:", error);
+    res.status(500).json({ message: 'Error al obtener los eventos' });
+  }
+};
+
+
 
 export const getEvento = async (req, res) => {
     const eventoId = req.params.id;
