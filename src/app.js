@@ -14,7 +14,7 @@ import solicitudRoutes from './routes/solicitud.routes.js'
 import ayudaRoutes from './routes/ayuda.routes.js'
 import paymentRoutes  from './routes/payment.routes.js'
 import dashboardRoutes from './routes/dashboard.routes.js'
-import validationDNIRoute from './routes/validationDNI.route.js'
+import validationDNIRoute from './routes/validation.route.js'
 
 import cookieParser from 'cookie-parser'
 
