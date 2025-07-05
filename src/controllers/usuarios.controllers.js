@@ -15,7 +15,7 @@ const generarToken = (user) => {
             verified: user.VerifiedOrganizer,
         },
         JWT_SECRET,
-        { expiresIn: '1h' }
+        { expiresIn: '30d' }
     );
 };
 
@@ -95,7 +95,7 @@ export const loginUsuario = async (req, res) => {
             httpOnly: true,
             secure: isProduction, // true en producción (HTTPS)
             sameSite:isProduction ? 'None' : 'Lax',
-            maxAge: 3600000,
+            maxAge: 1000 * 60 * 60 * 24 * 30,
             path: '/',
         });
 
