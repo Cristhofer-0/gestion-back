@@ -21,7 +21,7 @@ import cookieParser from 'cookie-parser'
 
 const app = express()
 //PARA QUE CUALQUIER PUERTO PUEDA INGRESAR
-const allowedOrigins = ['http://localhost:3001', 'http://localhost:3002', 'https://sistemajoinwithus.netlify.app', 'https://joinwithusoficial.netlify.app'];
+const allowedOrigins = ['http://localhost:3001', 'http://localhost:3002', 'https://sistemajoinwithus.netlify.app', 'https://joinwithusoficial.netlify.app', 'https://gestion-front.vercel.app'];
 
 app.use(cors({
   origin: function (origin, callback) {
