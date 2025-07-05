@@ -166,7 +166,7 @@ export const ordenPagada = async (req, res) => {
 
     console.log(`Órdenes de ${userId} actualizadas a "paid" y stock actualizado.`);
 
-    return res.redirect("http://localhost:3001/carrito?status=paid");
+    return res.redirect(`${process.env.NEXT_PUBLIC_API_BASE_URL}/carrito?status=paid`);
   } catch (err) {
     console.error('Error al actualizar el estado de pago:', err);
     return res.status(500).json({ message: 'Error al actualizar el estado de pago.' });

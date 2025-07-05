@@ -93,8 +93,8 @@ export const loginUsuario = async (req, res) => {
         const isProduction = process.env.NODE_ENV === 'production';
         res.cookie('tokenUsuario', token, {
             httpOnly: true,
-            secure: isProduction, // true en producción (HTTPS)
-            sameSite:isProduction ? 'None' : 'Lax',
+            secure: true, // true en producción (HTTPS)
+            sameSite:"None",
             maxAge: 1000 * 60 * 60 * 24 * 30,
             path: '/',
         });
