@@ -30,11 +30,11 @@ CREATE TABLE Events (
     Address NVARCHAR(255),
     Latitude DECIMAL(10,7),
     Longitude DECIMAL(10,7),
-    Visibility NVARCHAR(20) CHECK (Visibility IN ('public', 'private', 'invite-only')) NOT NULL,
+    Visibility NVARCHAR(20) CHECK (Visibility IN ('public')) NOT NULL,
     Categories NVARCHAR(255),
     BannerUrl NVARCHAR(255),
     VideoUrl NVARCHAR(255),
-    Status NVARCHAR(20) CHECK (Status IN ('draft', 'pending_approval', 'published', 'cancelled')) DEFAULT 'draft',
+    Status NVARCHAR(20) CHECK (Status IN ('draft', 'published')) DEFAULT 'draft',
     Capacity INT,
     createdAt  DATETIMEOFFSET,
     updatedAt  DATETIMEOFFSET,
@@ -85,29 +85,6 @@ CREATE TABLE Reviews (
     CONSTRAINT FK_Reviews_Users FOREIGN KEY (UserId) REFERENCES Users(UserId)
 );
  
-
-
--- Tabla de Reservaciones
-CREATE TABLE Reservations (
-    ReservationId INT IDENTITY(1,1) PRIMARY KEY,
-    UserId INT NOT NULL,
-    EventType NVARCHAR(100),
-    Location NVARCHAR(255),
-    CapacityMin INT,
-    CapacityMax INT,
-    StartDate DATETIME,
-    EndDate DATETIME,
-    ServicesRequested NVARCHAR(MAX),
-    ContactName NVARCHAR(150),
-    ContactEmail NVARCHAR(100),
-    ContactPhone NVARCHAR(20),
-    DocumentId NVARCHAR(20),
-    ClientType NVARCHAR(20) CHECK (ClientType IN ('natural', 'company')),
-    Status NVARCHAR(20) CHECK (Status IN ('pending', 'confirmed', 'cancelled')) DEFAULT 'pending',
-    createdAt DATETIMEOFFSET,
-    CONSTRAINT FK_Reservations_Users FOREIGN KEY (UserId) REFERENCES Users(UserId)
-);
-
 -- Tabla de Notificaciones
 CREATE TABLE Notifications (
     NotificationId INT IDENTITY(1,1) PRIMARY KEY,
@@ -119,27 +96,8 @@ CREATE TABLE Notifications (
     CONSTRAINT FK_Notifications_Users FOREIGN KEY (UserId) REFERENCES Users(UserId)
 );
 
--- Tabla de Cupones
-CREATE TABLE Coupons (
-    CouponId INT IDENTITY(1,1) PRIMARY KEY,
-    Code NVARCHAR(50) NOT NULL UNIQUE,
-    DiscountPercentage DECIMAL(5,2) NOT NULL,
-    ValidFrom DATE NOT NULL,
-    ValidUntil DATE NOT NULL,
-    MaxUses INT,
-    UsedCount INT DEFAULT 0,
-    createdAt  DATETIMEOFFSET,
-);
 
--- Tabla de Favoritos
-CREATE TABLE Favorites (
-    FavoriteId INT IDENTITY(1,1) PRIMARY KEY,
-    UserId INT NOT NULL,
-    EventId INT NOT NULL,
-    createdAt  DATETIMEOFFSET,
-    CONSTRAINT FK_Favorites_Users FOREIGN KEY (UserId) REFERENCES Users(UserId),
-    CONSTRAINT FK_Favorites_Events FOREIGN KEY (EventId) REFERENCES Events(EventId)
-)
+
 
 
 -- Insertar registros en la tabla de Usuarios
@@ -173,28 +131,19 @@ VALUES
 INSERT INTO Orders (UserId, EventId, TicketId, Quantity, TotalPrice, PaymentStatus)
 VALUES
 (1, 1, 1, 2, 100.00, 'paid'),
-(2, 2, 2, 1, 100.00, 'pending'),
+(2, 2, 2, 1, 100.00, 'paid'),
 (3, 3, 3, 1, 0.00, 'paid'),
 (4, 4, 4, 3, 60.00, 'paid'),
-(5, 5, 5, 5, 50.00, 'pending');
+(5, 5, 5, 5, 50.00, 'paid');
 
 -- Insertar registros en la tabla de Reseñas
 INSERT INTO Reviews (EventId, UserId, Rating, Comment)
 VALUES
-(1, 1, 5, '¡Gran concierto! Muy buen ambiente.'),
-(2, 2, 4, 'Interesante conferencia, pero algunos ponentes fueron un poco largos.'),
-(3, 3, 3, 'La feria fue buena, pero faltaban más startups.'),
-(4, 4, 5, 'Excelente festival de cine, las películas fueron muy buenas.'),
-(5, 5, 4, 'La exposición fue muy bonita, aunque algunos cuadros estaban mal iluminados.');
-
--- Insertar registros en la tabla de Reservaciones
-INSERT INTO Reservations (UserId, EventType, Location, CapacityMin, CapacityMax, StartDate, EndDate, ServicesRequested, ContactName, ContactEmail, ContactPhone, DocumentId, ClientType, Status)
-VALUES
-(1, 'Conferencia', 'Hotel Central', 50, 100, '2025-06-05 09:00:00', '2025-06-05 18:00:00', 'Proyector, Catering', 'María López', 'maria.lopez@example.com', '555123456', 'AB1234', 'company', 'confirmed'),
-(2, 'Boda', 'Restaurante Los Olivos', 30, 150, '2025-07-10 14:00:00', '2025-07-10 22:00:00', 'Catering, Decoración', 'Pedro Ruiz', 'pedro.ruiz@example.com', '555987654', 'CD5678', 'natural', 'pending'),
-(3, 'Evento Corporativo', 'Auditorio Nacional', 100, 300, '2025-08-15 08:00:00', '2025-08-15 17:00:00', 'Equipos de sonido, Pantallas', 'Sofía González', 'sofia.gonzalez@example.com', '555555555', 'EF9101', 'company', 'pending'),
-(4, 'Fiesta Privada', 'Casa de Campo', 20, 50, '2025-09-01 19:00:00', '2025-09-01 23:00:00', 'Música, Catering', 'David Martín', 'david.martin@example.com', '555777777', 'GH1122', 'natural', 'confirmed'),
-(5, 'Reunión Empresarial', 'Oficinas Corp', 10, 20, '2025-10-01 10:00:00', '2025-10-01 14:00:00', 'Proyector, Coffee Break', 'Laura Fernández', 'laura.fernandez@example.com', '555666666', 'IJ2233', 'company', 'pending');
+(1, 1, 5, 'La plataforma es súper intuitiva. En minutos creé mi primer evento y comencé a vender entradas.'),
+(2, 2, 4, 'Me encanta el panel de control, puedo ver las estadísticas de ventas en tiempo real. Muy útil.'),
+(3, 3, 3, 'Excelente servicio. Gestionar múltiples eventos nunca fue tan fácil.'),
+(4, 4, 5, 'Pude personalizar mis eventos con imágenes, fechas y precios sin complicaciones. Muy recomendable.'),
+(5, 5, 4, 'Tuve un problema con el acceso, pero el soporte fue rápido y eficiente. ¡Gracias!');
 
 -- Insertar registros en la tabla de Notificaciones
 INSERT INTO Notifications (UserId, Type, Message)
@@ -204,21 +153,3 @@ VALUES
 (3, 'Pedido', 'Tu pedido para la Feria de Emprendedores ha sido confirmado.'),
 (4, 'Reserva', 'La Boda en Restaurante Los Olivos ha sido confirmada.'),
 (5, 'Cupones', 'Tienes un nuevo cupón de descuento de 10% para la Exposición de Arte.');
-
--- Insertar registros en la tabla de Cupones
-INSERT INTO Coupons (Code, DiscountPercentage, ValidFrom, ValidUntil, MaxUses)
-VALUES
-('DESCUENTO10', 10.00, '2025-05-01', '2025-05-31', 100),
-('VIP20', 20.00, '2025-06-01', '2025-06-30', 50),
-('SUMMER15', 15.00, '2025-07-01', '2025-07-31', 200),
-('ART10', 10.00, '2025-08-01', '2025-08-31', 150),
-('CONGRESO25', 25.00, '2025-09-01', '2025-09-30', 75);
-
--- Insertar registros en la tabla de Favoritos
-INSERT INTO Favorites (UserId, EventId)
-VALUES
-(1, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5);

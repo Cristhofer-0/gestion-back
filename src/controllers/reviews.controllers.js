@@ -1,14 +1,29 @@
+import { where } from 'sequelize';
 import Review from '../models/Revision/Review.js';
+import User from '../models/Usuario/Usuario.js';
+
+Review.belongsTo(User, { foreignKey: 'UserId' });
 
 export const getReviews = async (req, res) => {
+    const { usuarioId } = req.query;
+
     try {
-        const reviews = await Review.findAll();
+        const whereCondition = usuarioId ? { UserId: usuarioId } : undefined;
+
+        const reviews = await Review.findAll({
+            where: whereCondition,
+            include: {
+                model: User,
+                attributes: ['FullName', 'Role'] // Asegúrate de incluir los atributos que necesitas
+            }
+        });
+
         res.json(reviews);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error al obtener los reviews' });
     }
-}
+};
 
 export const getReview = async (req, res) => {
     const reviewId = req.params.id;
