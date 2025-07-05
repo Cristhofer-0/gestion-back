@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken'
 import Order from '../models/Order/Order.js';
 import Ticket from '../models/Ticket/Ticket.js';
 import Event from '../models/Eventos/Evento.js';
+import dotenv from 'dotenv'
+dotenv.config()
 
 //MODELO DE PRUEBAS
 export const createSession =  async  (req, res) =>{
@@ -35,8 +37,11 @@ export const createSession =  async  (req, res) =>{
     ],
 
     mode:'payment',
-    success_url: 'http://localhost:3000/success',
-    cancel_url: 'http://localhost:3000/cancel'
+    success_url: `${process.env.URL_API_RAILWAY}/success?token=${token}`, //link del backend
+    cancel_url: `${process.env.URL_API_RAILWAY}/success?token=${token}`,
+    metadata: {
+      userId: userId.toString()
+    }
   })
 
   return res.json(session)
@@ -46,7 +51,7 @@ export const createSession =  async  (req, res) =>{
 export const createSessionFromPendingOrders = async (req, res) => {
   try {
     // 🔐 Verifica y decodifica el token
-    const token = req.cookies?.tokenUsuario;
+    const token = req.cookies?.tokenUsuario || req.query.token;
     if (!token) {
       return res.status(401).json({ message: 'No autorizado. Token no encontrado.' });
     }
@@ -99,8 +104,11 @@ export const createSessionFromPendingOrders = async (req, res) => {
     const session = await stripe.checkout.sessions.create({
       line_items,
       mode: 'payment',
-      success_url: 'http://localhost:3000/success',
-      cancel_url: 'http://localhost:3000/cancel'
+      success_url: `${process.env.URL_API_RAILWAY}/success?token=${token}`,
+      cancel_url: `${process.env.URL_API_RAILWAY}/success?token=${token}`,
+      metadata: {
+        userId: userId.toString()
+      }
     });
 
     return res.json(session);
@@ -113,7 +121,7 @@ export const createSessionFromPendingOrders = async (req, res) => {
 
 export const ordenPagada = async (req, res) => {
   try {
-    const token = req.cookies?.tokenUsuario;
+    const token = req.cookies?.tokenUsuario || req.query.token;
     if (!token) {
       return res.status(401).json({ message: 'No autorizado. Token no encontrado.' });
     }
@@ -166,7 +174,8 @@ export const ordenPagada = async (req, res) => {
 
     console.log(`Órdenes de ${userId} actualizadas a "paid" y stock actualizado.`);
 
-    return res.redirect(`${process.env.NEXT_PUBLIC_API_BASE_URL}/carrito?status=paid`);
+    const redirUrl = process.env.URL_PRUEBAS_DE_MRD;
+    return res.redirect(`${redirUrl}/carrito?status=paid`); //aca va el front
   } catch (err) {
     console.error('Error al actualizar el estado de pago:', err);
     return res.status(500).json({ message: 'Error al actualizar el estado de pago.' });
