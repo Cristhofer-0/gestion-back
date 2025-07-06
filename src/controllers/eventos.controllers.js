@@ -1,32 +1,34 @@
 import Evento from '../models/Eventos/Evento.js';
+import Order from '../models/Order/Order.js';
+import Notification from '../models/Notificacion/Notificacion.js';
 
 export const getEventos = async (req, res) => {
-  try {
-    const eventos = await Evento.findAll();
-    const hoy = new Date();
+    try {
+        const eventos = await Evento.findAll();
+        const hoy = new Date();
 
-    await Promise.all(
-      eventos.map(async (evento) => {
-        try {
-          const fechaFin = new Date(evento.EndDate);
+        await Promise.all(
+            eventos.map(async (evento) => {
+                try {
+                    const fechaFin = new Date(evento.EndDate);
 
-          if (!fechaFin || isNaN(fechaFin)) return;
+                    if (!fechaFin || isNaN(fechaFin)) return;
 
-          if (fechaFin < hoy && evento.Status === 'published') {
-            evento.Status = 'draft';
-            await evento.save();
-          }
-        } catch (innerError) {
-          console.error("Error al actualizar estado del evento:", innerError);
-        }
-      })
-    );
+                    if (fechaFin < hoy && evento.Status === 'published') {
+                        evento.Status = 'draft';
+                        await evento.save();
+                    }
+                } catch (innerError) {
+                    console.error("Error al actualizar estado del evento:", innerError);
+                }
+            })
+        );
 
-    res.json(eventos);
-  } catch (error) {
-    console.error("Error general en getEventos:", error);
-    res.status(500).json({ message: 'Error al obtener los eventos' });
-  }
+        res.json(eventos);
+    } catch (error) {
+        console.error("Error general en getEventos:", error);
+        res.status(500).json({ message: 'Error al obtener los eventos' });
+    }
 };
 
 
@@ -71,18 +73,29 @@ export const updateEvento = async (req, res) => {
             return res.status(404).json({ message: 'Evento no encontrado o sin cambios' });
         }
 
-        // 🔍 Obtener el nombre actualizado del evento
+        // 🔍 Obtener el evento actualizado
         const eventoActualizado = await Evento.findByPk(eventoId);
 
-        // ✅ Emitir nombre en la notificación
-        global.io.emit('evento_modificado', {
-            id: eventoActualizado?.EventId,
-            nombre: eventoActualizado?.Title || 'Evento',
-            mensaje: 'Este evento ha sido modificado',
+        // 🧾 Obtener todos los usuarios que tienen órdenes para este evento
+        const orders = await Order.findAll({
+            where: { EventId: eventoId },
+            attributes: ['UserId'],
+            group: ['UserId'], // Evita notificaciones duplicadas por usuario
         });
 
-        res.json({ message: 'Evento actualizado correctamente' });
+        // 🔔 Crear una notificación para cada usuario
+        const notificaciones = orders.map(order => ({
+            UserId: order.UserId,
+            EventId: eventoId,
+            Message: `El evento "${eventoActualizado.Title}" ha sido modificado. Revisa los cambios.`,
+            IsRead: false,
+        }));
+
+        await Notification.bulkCreate(notificaciones);
+
+        res.json({ message: 'Evento actualizado y notificaciones generadas' });
     } catch (error) {
+        console.error("❌ Error al actualizar evento o generar notificaciones:", error);
         res.status(500).json({ message: 'Error al actualizar evento', error });
     }
 };

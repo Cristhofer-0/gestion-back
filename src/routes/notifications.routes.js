@@ -1,9 +1,11 @@
 import { Router } from "express";
-import { createNotificacion, deleteNotificacion, getNotificacion, getNotificaciones, updateNotificacion } from "../controllers/notifications.controllers.js";
+import { createNotificacion, deleteNotificacion, getNotificacion, getNotificaciones, updateNotificacion, getNotificacionesPorUsuario } from "../controllers/notifications.controllers.js";
 
 const router = Router()
 
 router.get('/notificaciones', getNotificaciones)
+
+router.get('/notificaciones/usuario/:userId', getNotificacionesPorUsuario); 
 
 router.get('/notificaciones/:id', getNotificacion)
 

@@ -75,3 +75,23 @@ export const deleteNotificacion = async (req, res) => {
         res.status(500).json({ message: 'Error al eliminar la notificación' });
     }
 }
+
+export const getNotificacionesPorUsuario = async (req, res) => {
+    const userId = req.params.userId;
+
+    if (isNaN(userId)) {
+        return res.status(400).json({ message: 'UserId inválido' });
+    }
+
+    try {
+        const notificaciones = await Notificacion.findAll({
+            where: { UserId: userId },
+            order: [['NotificationId', 'DESC']]
+        });
+
+        res.json(notificaciones);
+    } catch (error) {
+        console.error("❌ Error al obtener notificaciones por usuario:", error);
+        res.status(500).json({ message: 'Error al obtener notificaciones del usuario' });
+    }
+};

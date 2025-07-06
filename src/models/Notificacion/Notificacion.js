@@ -11,9 +11,12 @@ const Notification =sequelize.define( 'Notification',{
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    Type: DataTypes.STRING,
+    EventId: {
+        type: DataTypes.INTEGER,    
+        allowNull: false
+    },
     Message: DataTypes.TEXT,
-    ReadStatus: {
+    IsRead: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
     }
