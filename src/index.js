@@ -10,13 +10,6 @@ dotenv.config();
 // Crear el servidor HTTP manualmente
 const server = http.createServer(app);
 
-// console.log("MYSQLHOST:", process.env.MYSQLHOST);
-// console.log("MYSQLPORT:", process.env.MYSQLPORT);
-// console.log("MYSQLUSER:", process.env.MYSQLUSER);
-// console.log("MYSQLDATABASE:", process.env.MYSQLDATABASE);
-// console.log("🔍 URL_API_RAILWAY:", process.env.URL_API_RAILWAY);
-// console.log("🔍 URL_API_RAILWAY:", process.env.URL_PRUEBAS_DE_MRD)
-
 // Configurar Socket.IO con CORS
 const io = new Server(server, {
   cors: {
@@ -31,10 +24,10 @@ global.io = io;
 
 // Eventos de conexión de WebSocket
 io.on('connection', (socket) => {
-  console.log('🟢 Cliente conectado por WebSocket');
+  //console.log('🟢 Cliente conectado por WebSocket');
 
   socket.on('disconnect', () => {
-    console.log('🔴 Cliente desconectado del WebSocket');
+    //console.log('🔴 Cliente desconectado del WebSocket');
   });
 });
 
@@ -46,7 +39,7 @@ await sequelize.authenticate()
     // Iniciar el servidor
     const PORT = process.env.APP_PORT || 3000;
     server.listen(PORT, () => {
-      console.log(`✅ Servidor iniciado: http://localhost:${PORT}`);
+      console.log(`✅ Servidor iniciado exitosamente`);
     });
   })
   .catch(err => {

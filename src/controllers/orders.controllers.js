@@ -237,9 +237,9 @@ export const historialCompras = async (req, res) => {
             image: order.Event.BannerUrl || '/placeholder.svg?height=400&width=600',
             quantity: order.Quantity,
             price: Number(order.Ticket.Price),
-            totalPrice:Number(order.TotalPrice),
+            totalPrice: Number(order.TotalPrice),
             type: order.Ticket.Type,
-            date: order.OrderDate ? order.OrderDate.toISOString() : null
+            date: order.OrderDate ? new Date(order.OrderDate).toISOString() : null
         }));
 
         res.status(200).json({
