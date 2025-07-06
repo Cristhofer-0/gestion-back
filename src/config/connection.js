@@ -14,9 +14,14 @@ const sequelize = new Sequelize(
     timezone: '-05:00',
     logging: false,
     dialectOptions: {
-      ssl: {
-        rejectUnauthorized: false,
-      },
+      ssl: { rejectUnauthorized: false },
+      dateStrings: true,
+      typeCast(field, next) {
+        if (field.type === 'DATETIME' || field.type === 'TIMESTAMP') {
+          return field.string();
+        }
+        return next();
+      }
     },
   }
 );

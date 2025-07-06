@@ -14,8 +14,8 @@ const server = http.createServer(app);
 // console.log("MYSQLPORT:", process.env.MYSQLPORT);
 // console.log("MYSQLUSER:", process.env.MYSQLUSER);
 // console.log("MYSQLDATABASE:", process.env.MYSQLDATABASE);
-console.log("🔍 URL_API_RAILWAY:", process.env.URL_API_RAILWAY);
-console.log("🔍 URL_API_RAILWAY:", process.env.URL_PRUEBAS_DE_MRD)
+// console.log("🔍 URL_API_RAILWAY:", process.env.URL_API_RAILWAY);
+// console.log("🔍 URL_API_RAILWAY:", process.env.URL_PRUEBAS_DE_MRD)
 
 // Configurar Socket.IO con CORS
 const io = new Server(server, {
