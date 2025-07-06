@@ -121,8 +121,8 @@ export const logoutUsuario = async (req, res) => {
 
     res.clearCookie('tokenUsuario', {
         httpOnly: true,
-        secure: isProduction,
-        sameSite: isProduction? 'None' : 'Lax',
+        secure: true,
+        sameSite:"None",
         path: '/',
     });
 
