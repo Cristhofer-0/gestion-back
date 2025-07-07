@@ -18,7 +18,9 @@ const io = new Server(server, {
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   },
-});
+  transports: ['websocket']
+}).then(res => console.log("✅ OK", res))
+  .catch(err => console.error("❌ Error", err));
 
 // Guardar `io` en global para usarlo en controladores
 global.io = io;
@@ -31,7 +33,7 @@ io.on('connection', (socket) => {
     console.log(`👥 Usuario ${userId} se unió a la sala user-${userId}`);
     socket.join(`user-${userId}`);
   });
-  
+
   socket.on('disconnect', () => {
    console.log('🔴 Cliente desconectado del WebSocket');
   });
