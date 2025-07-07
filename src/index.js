@@ -1,3 +1,4 @@
+//index.js
 import app from './app.js';
 import sequelize from './config/connection.js';
 import dotenv from 'dotenv';
@@ -26,6 +27,11 @@ global.io = io;
 io.on('connection', (socket) => {
   console.log('🟢 Cliente conectado por WebSocket');
 
+  socket.on('joinRoom', (userId) => {
+    console.log(`👥 Usuario ${userId} se unió a la sala user-${userId}`);
+    socket.join(`user-${userId}`);
+  });
+  
   socket.on('disconnect', () => {
    console.log('🔴 Cliente desconectado del WebSocket');
   });

@@ -29,14 +29,19 @@ export const getNotificacion = async (req, res) => {
 }
 
 export const createNotificacion = async (req, res) => {
-    try {
-        const notificacion = await Notificacion.create(req.body);
-        res.status(201).json(notificacion);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error al crear la notificación' });
-    }
-}
+  try {
+    const notificacion = await Notificacion.create(req.body);
+
+    // 🔔 Emitir por WebSocket a todos los conectados
+    global.io.emit('nuevaNotificacion', notificacion);
+
+    res.status(201).json(notificacion);
+  } catch (error) {
+    console.error("❌ Error al crear la notificación:", error);
+    res.status(500).json({ message: 'Error al crear la notificación' });
+  }
+};
+
 
 export const updateNotificacion = async (req, res) => {
     const notificacionId = req.params.id;
