@@ -24,10 +24,10 @@ global.io = io;
 
 // Eventos de conexión de WebSocket
 io.on('connection', (socket) => {
-  //console.log('🟢 Cliente conectado por WebSocket');
+  console.log('🟢 Cliente conectado por WebSocket');
 
   socket.on('disconnect', () => {
-    //console.log('🔴 Cliente desconectado del WebSocket');
+   console.log('🔴 Cliente desconectado del WebSocket');
   });
 });
 

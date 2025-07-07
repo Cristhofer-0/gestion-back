@@ -95,3 +95,43 @@ export const getNotificacionesPorUsuario = async (req, res) => {
         res.status(500).json({ message: 'Error al obtener notificaciones del usuario' });
     }
 };
+
+export const marcarNotificacionComoLeida = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const [updated] = await Notificacion.update( // ✅ CORRECTO
+            { IsRead: true },
+            { where: { NotificationId: id } }
+        );
+        if (updated === 0) {
+            return res.status(404).json({ message: "Notificación no encontrada" });
+        }
+        res.json({ message: "Notificación marcada como leída" });
+    } catch (error) {
+        console.error("❌ Error al marcar notificación como leída:", error);
+        res.status(500).json({ message: "Error interno" });
+    }
+};
+
+export const marcarTodasNotificacionesComoLeidas = async (req, res) => {
+  const userId = req.params.userId;
+  console.log("🧪 Backend: marcando todas como leídas para UserId:", userId);
+
+  try {
+    const [updatedCount] = await Notificacion.update(
+      { IsRead: true },
+      { where: { UserId: userId } }
+    );
+
+    console.log("✅ Filas actualizadas:", updatedCount);
+
+    if (updatedCount === 0) {
+      return res.status(404).json({ message: "No se actualizaron notificaciones" });
+    }
+
+    res.json({ message: "Todas las notificaciones marcadas como leídas", updated: updatedCount });
+  } catch (error) {
+    console.error("❌ Error al marcar todas como leídas:", error);
+    res.status(500).json({ message: "Error interno" });
+  }
+};
