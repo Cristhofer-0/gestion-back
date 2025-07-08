@@ -1,4 +1,5 @@
 import Notificacion from '../models/Notificacion/Notificacion.js';
+import Order from '../models/Order/Order.js';
 
 export const getNotificaciones = async (req, res) => {
     try {
@@ -29,17 +30,52 @@ export const getNotificacion = async (req, res) => {
 }
 
 export const createNotificacion = async (req, res) => {
-  try {
-    const notificacion = await Notificacion.create(req.body);
+    const { EventId, Message } = req.body;
 
-    // 🔔 Emitir por WebSocket a todos los conectados
-    global.io.emit('nuevaNotificacion', notificacion);
+    if (!EventId || !Message) {
+        return res.status(400).json({ message: "Faltan datos obligatorios" });
+    }
 
-    res.status(201).json(notificacion);
-  } catch (error) {
-    console.error("❌ Error al crear la notificación:", error);
-    res.status(500).json({ message: 'Error al crear la notificación' });
-  }
+    try {
+        // 🔍 1. Buscar todos los compradores de entradas pagadas para ese evento
+        const compradores = await Order.findAll({
+            where: {
+                EventId,
+                PaymentStatus: 'paid'
+            },
+            attributes: ['UserId'],
+            group: ['UserId']
+        });
+
+        if (compradores.length === 0) {
+            return res.status(404).json({ message: "No hay compradores para este evento" });
+        }
+
+        // 📦 2. Crear notificación para cada comprador
+        const notificacionesCreadas = [];
+
+        for (const { UserId } of compradores) {
+            const noti = await Notificacion.create({
+                UserId,
+                EventId,
+                Message,
+                IsRead: false
+            });
+
+            notificacionesCreadas.push(noti);
+
+            // 📡 3. Enviar por socket solo a ese usuario
+            global.io.to(String(UserId)).emit("nuevaNotificacion", noti);
+        }
+
+        res.status(201).json({
+            message: "Notificaciones creadas correctamente",
+            notificaciones: notificacionesCreadas
+        });
+    } catch (error) {
+        console.error("❌ Error al crear la notificación:", error);
+        res.status(500).json({ message: 'Error al crear la notificación' });
+    }
 };
 
 

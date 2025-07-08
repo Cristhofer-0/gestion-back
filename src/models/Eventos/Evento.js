@@ -20,11 +20,11 @@ const Event =sequelize.define( 'Event',{
         allowNull: false
     },
     StartDate: {
-        type: DataTypes.DATEONLY,
+        type: DataTypes.DATE,
         allowNull: false
     },
     EndDate: {
-        type: DataTypes.DATEONLY,
+        type: DataTypes.DATE,
         allowNull: false
     },
     Address: DataTypes.STRING,
@@ -48,4 +48,3 @@ const Event =sequelize.define( 'Event',{
 });
 
 export default Event;
-

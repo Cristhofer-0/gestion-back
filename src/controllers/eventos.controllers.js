@@ -1,3 +1,4 @@
+//eventos.controllers.js
 import Evento from '../models/Eventos/Evento.js';
 import Order from '../models/Order/Order.js';
 import Notification from '../models/Notificacion/Notificacion.js';
@@ -23,8 +24,14 @@ export const getEventos = async (req, res) => {
                 }
             })
         );
+        const eventosConFechasISO = eventos.map(evento => ({
+            ...evento.toJSON?.() ?? evento,
+            StartDate: evento.StartDate,
+            EndDate: evento.EndDate,
+        }));
 
-        res.json(eventos);
+
+        res.json(eventosConFechasISO);
     } catch (error) {
         console.error("Error general en getEventos:", error);
         res.status(500).json({ message: 'Error al obtener los eventos' });
@@ -44,7 +51,11 @@ export const getEvento = async (req, res) => {
         if (!evento) {
             return res.status(404).json({ message: 'Evento no encontrado' });
         }
-        res.json(evento);
+        res.status(201).json({
+            ...evento.toJSON(),
+            StartDate: evento.StartDate,
+            EndDate: evento.EndDate
+        })
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error al obtener el evento' });
@@ -52,19 +63,37 @@ export const getEvento = async (req, res) => {
 }
 
 export const createEvento = async (req, res) => {
-    try {
-        const evento = await Evento.create(req.body);
-        res.status(201).json(evento);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error al crear el evento' });
+  try {
+    // Convertir las fechas string a objetos Date si es necesario
+    const eventoData = { ...req.body }
+
+    if (eventoData.StartDate && typeof eventoData.StartDate === "string") {
+      eventoData.StartDate = new Date(eventoData.StartDate)
     }
+
+    if (eventoData.EndDate && typeof eventoData.EndDate === "string") {
+      eventoData.EndDate = new Date(eventoData.EndDate)
+    }
+
+    const evento = await Evento.create(eventoData)
+    res.status(201).json({
+        ...evento.toJSON(),
+        StartDate: evento.StartDate,
+        EndDate: evento.EndDate
+    })
+  } catch (error) {
+    console.error("Error al crear evento:", error)
+    res.status(500).json({ message: "Error al crear el evento", error: error.message })
+  }
 }
+
 
 export const updateEvento = async (req, res) => {
     const eventoId = req.params.id;
 
     try {
+        console.log("Recibido en backend:", req.body) 
+
         const [updatedRows] = await Evento.update(req.body, {
             where: { EventId: eventoId },
         });
