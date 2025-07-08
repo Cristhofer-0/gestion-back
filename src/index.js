@@ -26,15 +26,15 @@ global.io = io;
 
 // Eventos de conexión de WebSocket
 io.on('connection', (socket) => {
-  console.log('🟢 Cliente conectado por WebSocket');
+  //console.log('🟢 Cliente conectado por WebSocket');
 
   socket.on('joinRoom', (userId) => {
-    console.log(`👥 Usuario ${userId} se unió a la sala user-${userId}`);
+    //console.log(`👥 Usuario ${userId} se unió a la sala user-${userId}`);
     socket.join(`user-${userId}`);
   });
 
   socket.on('disconnect', () => {
-   console.log('🔴 Cliente desconectado del WebSocket');
+   //console.log('🔴 Cliente desconectado del WebSocket');
   });
 });
 
