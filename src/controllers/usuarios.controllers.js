@@ -281,7 +281,7 @@ export const enviarEnlaceReset = async (req, res) => {
 
     const resetToken = jwt.sign(
       {
-        userId: usuario.id,
+        userId: usuario.UserId,
         email: usuario.Email,
       },
       JWT_SECRET,
