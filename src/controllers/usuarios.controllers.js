@@ -242,3 +242,20 @@ export const cambiarPassword = async (req, res) => {
     return res.status(500).json({ message: "Error del servidor" })
   }
 }
+
+export const obtenerUsuarioPorEmail = async (req, res) => {
+  const { email } = req.params;
+
+  try {
+    const usuario = await User.findOne({ where: { email } });
+
+    if (!usuario) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    res.json(usuario);
+  } catch (error) {
+    console.error("Error al buscar usuario por email:", error);
+    res.status(500).json({ message: "Error del servidor" });
+  }
+};
