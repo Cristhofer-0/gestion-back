@@ -290,7 +290,7 @@ export const enviarEnlaceReset = async (req, res) => {
 
     console.log("🔐 Token generado:", resetToken);
 
-    const resetLink = `http://localhost:3000/forgotPassword?token=${resetToken}`;
+    const resetLink = `http://localhost:3000/changePassword?token=${resetToken}`;
     console.log("🔗 Enlace de restablecimiento:", resetLink);
 
     // ENVÍO DEL CORREO
@@ -306,9 +306,31 @@ export const enviarEnlaceReset = async (req, res) => {
       from: `"JoinWithUs" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "Restablece tu contraseña",
-      html: `<p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
-             <a href="${resetLink}">${resetLink}</a>
-             <p>Este enlace expirará en 15 minutos.</p>`,
+     html: `
+  <div style="font-family: Arial, sans-serif; background-color: #121212; padding: 20px; color: #e0e0e0;">
+    <div style="max-width: 600px; margin: 0 auto; background-color: #1e1e1e; border-radius: 8px; overflow: hidden; box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);">
+      <div style="background-color: #2d2d2d; color: #ffffff; padding: 24px; text-align: center;">
+        <h1 style="margin: 0; font-size: 24px;">JoinWithUs</h1>
+        <p style="margin: 5px 0 0; font-size: 16px;">Restablecimiento de contraseña</p>
+      </div>
+      <div style="padding: 30px; color: #e0e0e0;">
+        <p>Hola,</p>
+        <p>Recibimos una solicitud para restablecer la contraseña de tu cuenta. Para continuar, haz clic en el botón a continuación:</p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${resetLink}" style="background-color: #4f46e5; color: #ffffff; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-block;">
+            Restablecer Contraseña
+          </a>
+        </div>
+        <p>Si no realizaste esta solicitud, puedes ignorar este mensaje. El enlace caducará en 15 minutos por motivos de seguridad.</p>
+        <p style="margin-top: 30px;">Gracias,<br><strong>Equipo JoinWithUs</strong></p>
+      </div>
+      <div style="background-color: #181818; padding: 15px; text-align: center; font-size: 12px; color: #888888;">
+        © ${new Date().getFullYear()} JoinWithUs. Todos los derechos reservados.
+      </div>
+    </div>
+  </div>
+`
+,
     });
 
     console.log("✉️ Correo enviado exitosamente a:", email);

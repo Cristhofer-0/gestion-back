@@ -21,33 +21,43 @@ export const enviarAyuda = async (req, res) => {
       to: "sebaslade29@gmail.com",
       subject: "Consulta de Ayuda",
       html: `
-        <div style="background-color: #0e0e0e; color: #f0f0f0; font-family: 'Segoe UI', sans-serif; padding: 2rem; border-radius: 8px;">
-          <h2 style="color: #38bdf8; margin-bottom: 1rem;">💬 Nueva Consulta de Ayuda</h2>
-          <p style="margin-bottom: 1rem;">Un usuario ha enviado una consulta desde el formulario de soporte:</p>
-          
-          <table style="width: 100%; border-collapse: collapse; margin-bottom: 2rem;">
-            <tbody>
-              <tr>
-                <td style="padding: 0.75rem; border: 1px solid #333; font-weight: bold;">🙍‍♂️ Nombre</td>
-                <td style="padding: 0.75rem; border: 1px solid #333;">${nombre}</td>
-              </tr>
-              <tr>
-                <td style="padding: 0.75rem; border: 1px solid #333; font-weight: bold;">📧 Email</td>
-                <td style="padding: 0.75rem; border: 1px solid #333;">${email}</td>
-              </tr>
-              <tr>
-                <td style="padding: 0.75rem; border: 1px solid #333; font-weight: bold;">📝 Asunto</td>
-                <td style="padding: 0.75rem; border: 1px solid #333;">${asunto}</td>
-              </tr>
-              <tr>
-                <td style="padding: 0.75rem; border: 1px solid #333; font-weight: bold;">💡 Mensaje</td>
-                <td style="padding: 0.75rem; border: 1px solid #333;">${mensaje}</td>
-              </tr>
-            </tbody>
-          </table>
+<div style="background-color: #0e0e0e; color: #f1f1f1; font-family: 'Segoe UI', sans-serif; padding: 2rem; border-radius: 12px; max-width: 640px; margin: auto; box-shadow: 0 0 16px rgba(0, 0, 0, 0.5);">
+  <header style="text-align: center; margin-bottom: 2rem;">
+    <h2 style="color: #3b82f6; margin: 0; font-size: 1.8rem;">🚀 Nueva Solicitud de Cambio de Rol</h2>
+    <p style="margin-top: 0.5rem; color: #bcbcbc;">Un usuario ha enviado la siguiente información:</p>
+  </header>
 
-          <p style="font-size: 0.9rem; color: #aaa;">Este correo fue generado automáticamente por <strong style="color: #38bdf8;">Join With Us</strong>.</p>
-        </div>
+  <table style="width: 100%; border-collapse: collapse; background-color: #1a1a1a; border-radius: 8px; overflow: hidden; border: 1px solid #2b2b2b;">
+    <tbody>
+      <tr>
+        <td style="padding: 1rem; border-bottom: 1px solid #2b2b2b; font-weight: 600; width: 35%;">🆔 DNI</td>
+        <td style="padding: 1rem; border-bottom: 1px solid #2b2b2b;">${dni}</td>
+      </tr>
+      <tr>
+        <td style="padding: 1rem; border-bottom: 1px solid #2b2b2b; font-weight: 600;">🙍‍♂️ Nombre</td>
+        <td style="padding: 1rem; border-bottom: 1px solid #2b2b2b;">${nombre}</td>
+      </tr>
+      <tr>
+        <td style="padding: 1rem; border-bottom: 1px solid #2b2b2b; font-weight: 600;">📧 Email</td>
+        <td style="padding: 1rem; border-bottom: 1px solid #2b2b2b;">${email}</td>
+      </tr>
+      <tr>
+        <td style="padding: 1rem; border-bottom: 1px solid #2b2b2b; font-weight: 600;">📱 Teléfono</td>
+        <td style="padding: 1rem; border-bottom: 1px solid #2b2b2b;">${telefono}</td>
+      </tr>
+      <tr>
+        <td style="padding: 1rem; font-weight: 600;">📝 Razón</td>
+        <td style="padding: 1rem;">${razon}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <footer style="margin-top: 2.5rem; font-size: 0.9rem; color: #a1a1a1; text-align: center;">
+    Este mensaje fue generado automáticamente por <strong style="color: #3b82f6;">Join With Us</strong>. Si no esperabas este correo, puedes ignorarlo.
+  </footer>
+</div>
+
+
       `,
     };
 
