@@ -264,29 +264,41 @@ export const obtenerUsuarioPorEmail = async (req, res) => {
 export const enviarEnlaceReset = async (req, res) => {
   const { email } = req.body;
 
+  console.log("📥 Solicitud de restablecimiento recibida para:", email);
+
   try {
     const usuario = await User.findOne({ where: { Email: email } });
+
     if (!usuario) {
+      console.log("❌ Usuario no encontrado con el email:", email);
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
+    console.log("✅ Usuario encontrado:", {
+      id: usuario.id,
+      Email: usuario.Email,
+    });
+
     const resetToken = jwt.sign(
       {
-        userId: usuario.UserId,
+        userId: usuario.id,
         email: usuario.Email,
       },
       JWT_SECRET,
-      { expiresIn: '15m' } // Token válido por 15 minutos
+      { expiresIn: "15m" }
     );
 
-    const resetLink = `http://localhost:3000/forgotPassword?token=${resetToken}`;
+    console.log("🔐 Token generado:", resetToken);
 
-    // ENVÍO DEL CORREO (usa tus credenciales reales)
+    const resetLink = `http://localhost:3000/forgotPassword?token=${resetToken}`;
+    console.log("🔗 Enlace de restablecimiento:", resetLink);
+
+    // ENVÍO DEL CORREO
     const transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {
-        user: process.env.EMAIL_USER, // ej. joinwithus@gmail.com
-        pass: process.env.EMAIL_PASS, // contraseña de aplicación
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
 
@@ -299,9 +311,11 @@ export const enviarEnlaceReset = async (req, res) => {
              <p>Este enlace expirará en 15 minutos.</p>`,
     });
 
+    console.log("✉️ Correo enviado exitosamente a:", email);
+
     res.json({ message: "Enlace de restablecimiento enviado al correo." });
   } catch (error) {
-    console.error("Error al enviar correo:", error);
+    console.error("💥 Error al enviar correo:", error);
     res.status(500).json({ message: "Error al enviar correo." });
   }
 };
