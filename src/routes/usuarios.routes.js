@@ -12,8 +12,10 @@ router.post('/usuarios/login', loginUsuario);
 router.delete('/usuarios/logout', logoutUsuario);
 
 router.post('/usuarios/registrar', registerUsuario);
-router.get('/usuarios/:id', getUsuario);
+
 router.get("/usuarios/por-email/:email", obtenerUsuarioPorEmail);
+router.get('/usuarios/:id', getUsuario);
+
 router.put('/usuarios/:id', updateUsuario);
 router.delete('/usuarios/:id', deleteUsuario);
 router.put("/usuarios/:id/cambiar-password", cambiarPassword)
