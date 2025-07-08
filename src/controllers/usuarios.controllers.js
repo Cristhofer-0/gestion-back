@@ -290,7 +290,13 @@ export const enviarEnlaceReset = async (req, res) => {
 
     console.log("🔐 Token generado:", resetToken);
 
-    const resetLink = `http://localhost:3000/changePassword?token=${resetToken}`;
+     // URL base según el cliente
+    const baseUrl =
+      cliente === "ecommerce"
+        ? "http://localhost:3001"
+        : "http://localhost:3000"; // Por defecto "gestion"
+
+    const resetLink = `${baseUrl}/http://localhost:3000/changePassword?token=${resetToken}`;
     console.log("🔗 Enlace de restablecimiento:", resetLink);
 
     // ENVÍO DEL CORREO
