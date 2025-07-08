@@ -1,6 +1,7 @@
 import User from '../models/Usuario/Usuario.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import nodemailer from 'nodemailer';
 
 
 const JWT_SECRET = process.env.JWT_SECRET
@@ -257,5 +258,50 @@ export const obtenerUsuarioPorEmail = async (req, res) => {
   } catch (error) {
     console.error("Error al buscar usuario por email:", error);
     res.status(500).json({ message: "Error del servidor" });
+  }
+};
+
+export const enviarEnlaceReset = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const usuario = await User.findOne({ where: { Email: email } });
+    if (!usuario) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    const resetToken = jwt.sign(
+      {
+        userId: usuario.UserId,
+        email: usuario.Email,
+      },
+      JWT_SECRET,
+      { expiresIn: '15m' } // Token válido por 15 minutos
+    );
+
+    const resetLink = `http://localhost:3000/forgotPassword?token=${resetToken}`;
+
+    // ENVÍO DEL CORREO (usa tus credenciales reales)
+    const transporter = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        user: process.env.EMAIL_USER, // ej. joinwithus@gmail.com
+        pass: process.env.EMAIL_PASS, // contraseña de aplicación
+      },
+    });
+
+    await transporter.sendMail({
+      from: `"JoinWithUs" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Restablece tu contraseña",
+      html: `<p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
+             <a href="${resetLink}">${resetLink}</a>
+             <p>Este enlace expirará en 15 minutos.</p>`,
+    });
+
+    res.json({ message: "Enlace de restablecimiento enviado al correo." });
+  } catch (error) {
+    console.error("Error al enviar correo:", error);
+    res.status(500).json({ message: "Error al enviar correo." });
   }
 };
