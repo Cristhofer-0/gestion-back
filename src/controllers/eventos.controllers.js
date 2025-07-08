@@ -105,9 +105,14 @@ export const updateEvento = async (req, res) => {
             IsRead: false,
         }));
 
-        await Notification.bulkCreate(notificaciones);
+        const notisCreadas = await Notification.bulkCreate(notificaciones);
 
-        res.json({ message: 'Evento actualizado y notificaciones generadas' });
+        // ✅ Emitir una notificación por WebSocket a cada usuario
+        notisCreadas.forEach(noti => {
+        global.io.to(`user-${noti.UserId}`).emit('nuevaNotificacion', noti);
+        });
+
+        res.json({ message: 'Evento actualizado y notificaciones enviadas' });
     } catch (error) {
         console.error("❌ Error al actualizar evento o generar notificaciones:", error);
         res.status(500).json({ message: 'Error al actualizar evento', error });
