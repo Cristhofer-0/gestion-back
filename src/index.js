@@ -19,8 +19,7 @@ const io = new Server(server, {
     credentials: true,
   },
   transports: ['websocket']
-}).then(res => console.log("✅ OK", res))
-  .catch(err => console.error("❌ Error", err));
+})
 
 // Guardar `io` en global para usarlo en controladores
 global.io = io;
