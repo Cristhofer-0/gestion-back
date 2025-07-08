@@ -216,7 +216,7 @@ export const deleteUsuario = async (req, res) => {
 
 export const cambiarPassword = async (req, res) => {
   const { id } = req.params
-  const { currentPassword, newPassword } = req.body
+  const { currentPassword, newPassword, requireCurrent = true } = req.body
 
   try {
     const user = await User.findByPk(id)
@@ -225,9 +225,11 @@ export const cambiarPassword = async (req, res) => {
       return res.status(404).json({ message: "Usuario no encontrado" })
     }
 
-    const match = await bcrypt.compare(currentPassword, user.PasswordHash)
-    if (!match) {
-      return res.status(400).json({ message: "La contraseña actual es incorrecta" })
+    if (requireCurrent) {
+      const match = await bcrypt.compare(currentPassword, user.PasswordHash)
+      if (!match) {
+        return res.status(400).json({ message: "La contraseña actual es incorrecta" })
+      }
     }
 
     const hashedNewPassword = await bcrypt.hash(newPassword, 10)
