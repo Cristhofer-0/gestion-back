@@ -290,10 +290,10 @@ export const enviarEnlaceReset = async (req, res) => {
      // URL base según el cliente
     const baseUrl =
       cliente === "ecommerce"
-        ? "https://joinwithusoficial.netlify.app/usuario"
-        : "https://sistemagestionjoinwithus.netlify.app"; // Por defecto "gestion"
+        ? "https://joinwithus.vercel.app/usuario"
+        : "https://sistemajoinwithus.vercel.app"; // Por defecto "gestion"
 
-    const resetLink = `${baseUrl}/http://localhost:3000/changePassword?token=${resetToken}`;
+    const resetLink = `${baseUrl}/changePassword?token=${resetToken}`;
     //console.log("🔗 Enlace de restablecimiento:", resetLink);
 
     // ENVÍO DEL CORREO

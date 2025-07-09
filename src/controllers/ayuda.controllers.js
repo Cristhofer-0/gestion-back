@@ -30,10 +30,6 @@ export const enviarAyuda = async (req, res) => {
   <table style="width: 100%; border-collapse: collapse; background-color: #1a1a1a; border-radius: 8px; overflow: hidden; border: 1px solid #2b2b2b;">
     <tbody>
       <tr>
-        <td style="padding: 1rem; border-bottom: 1px solid #2b2b2b; font-weight: 600; width: 35%;">🆔 DNI</td>
-        <td style="padding: 1rem; border-bottom: 1px solid #2b2b2b;">${dni}</td>
-      </tr>
-      <tr>
         <td style="padding: 1rem; border-bottom: 1px solid #2b2b2b; font-weight: 600;">🙍‍♂️ Nombre</td>
         <td style="padding: 1rem; border-bottom: 1px solid #2b2b2b;">${nombre}</td>
       </tr>
@@ -42,12 +38,12 @@ export const enviarAyuda = async (req, res) => {
         <td style="padding: 1rem; border-bottom: 1px solid #2b2b2b;">${email}</td>
       </tr>
       <tr>
-        <td style="padding: 1rem; border-bottom: 1px solid #2b2b2b; font-weight: 600;">📱 Teléfono</td>
-        <td style="padding: 1rem; border-bottom: 1px solid #2b2b2b;">${telefono}</td>
+        <td style="padding: 1rem; border-bottom: 1px solid #2b2b2b; font-weight: 600;">📧 Email</td>
+        <td style="padding: 1rem; border-bottom: 1px solid #2b2b2b;">${asunto}</td>
       </tr>
       <tr>
         <td style="padding: 1rem; font-weight: 600;">📝 Razón</td>
-        <td style="padding: 1rem;">${razon}</td>
+        <td style="padding: 1rem;">${mensaje}</td>
       </tr>
     </tbody>
   </table>

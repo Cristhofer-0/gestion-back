@@ -174,7 +174,7 @@ export const ordenPagada = async (req, res) => {
 
     //console.log(`Órdenes de ${userId} actualizadas a "paid" y stock actualizado.`);
 
-    const redirUrl = process.env.URL_PRUEBAS_DE_MRD;
+    const redirUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     return res.redirect(`${redirUrl}/carrito?status=paid`); //aca va el front
   } catch (err) {
     console.error('Error al actualizar el estado de pago:', err);

@@ -6,24 +6,24 @@ import Notification from '../models/Notificacion/Notificacion.js';
 export const getEventos = async (req, res) => {
     try {
         const eventos = await Evento.findAll();
-        const hoy = new Date();
+        const ahora = new Date();
 
         await Promise.all(
             eventos.map(async (evento) => {
                 try {
-                    const fechaFin = new Date(evento.EndDate);
+                const fechaFin = new Date(evento.EndDate);
+                if (!fechaFin || isNaN(fechaFin)) return;
 
-                    if (!fechaFin || isNaN(fechaFin)) return;
-
-                    if (fechaFin < hoy && evento.Status === 'published') {
-                        evento.Status = 'draft';
-                        await evento.save();
-                    }
-                } catch (innerError) {
-                    console.error("Error al actualizar estado del evento:", innerError);
+                if (fechaFin.getTime() < ahora.getTime() && evento.Status === "published") {
+                    evento.Status = "draft";
+                    await evento.save();
+                }
+                } catch (err) {
+                console.error("Error al verificar evento vencido:", err);
                 }
             })
         );
+
         const eventosConFechasISO = eventos.map(evento => ({
             ...evento.toJSON?.() ?? evento,
             StartDate: evento.StartDate,
@@ -37,8 +37,6 @@ export const getEventos = async (req, res) => {
         res.status(500).json({ message: 'Error al obtener los eventos' });
     }
 };
-
-
 
 export const getEvento = async (req, res) => {
     const eventoId = req.params.id;
@@ -75,6 +73,16 @@ export const createEvento = async (req, res) => {
       eventoData.EndDate = new Date(eventoData.EndDate)
     }
 
+    const ahora = new Date();
+    if (
+      eventoData.Status === "published" &&
+      eventoData.EndDate.getTime() < ahora.getTime()
+    ) {
+      return res.status(400).json({
+        message: "No se puede publicar un evento cuya fecha ya finalizó.",
+      });
+    }
+
     const evento = await Evento.create(eventoData)
     res.status(201).json({
         ...evento.toJSON(),
@@ -93,6 +101,15 @@ export const updateEvento = async (req, res) => {
 
     try {
         //console.log("Recibido en backend:", req.body) 
+        if (
+            req.body.Status === "published" &&
+            req.body.EndDate &&
+            new Date(req.body.EndDate).getTime() < Date.now()
+        ) {
+            return res.status(400).json({
+                message: "No se puede publicar un evento cuya fecha ya finalizó.",
+            });
+        }
 
         const [updatedRows] = await Evento.update(req.body, {
             where: { EventId: eventoId },
@@ -124,7 +141,7 @@ export const updateEvento = async (req, res) => {
 
         // ✅ Emitir una notificación por WebSocket a cada usuario
         notisCreadas.forEach(noti => {
-        global.io.to(`user-${noti.UserId}`).emit('nuevaNotificacion', noti);
+            global.io.to(`user-${noti.UserId}`).emit('nuevaNotificacion', noti);
         });
 
         res.json({ message: 'Evento actualizado y notificaciones enviadas' });

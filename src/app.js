@@ -26,8 +26,8 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001', 
   'http://localhost:3002', 
-  'https://sistemagestionjoinwithus.netlify.app', 
-  'https://joinwithusoficial.netlify.app'
+  'https://sistemajoinwithus.vercel.app', 
+  'https://joinwithus.vercel.app'
 ];
 
 app.use(cors({

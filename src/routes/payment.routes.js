@@ -9,7 +9,7 @@ router.post("/createSessionFromPendingOrders", createSessionFromPendingOrders)
 
 router.get("/success", ordenPagada);
 router.get("/cancel", (req, res) => {
-    res.redirect(`${process.env.URL_PRUEBAS_DE_MRD}/carrito?status=cancelled`);
+    res.redirect(`${process.env.NEXT_PUBLIC_API_BASE_URL}/carrito?status=cancelled`);
 });
 
 
