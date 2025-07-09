@@ -14,7 +14,13 @@ const server = http.createServer(app);
 // Configurar Socket.IO con CORS
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:3000','http://localhost:3001', 'http://localhost:3002', 'https://sistemajoinwithus.netlify.app'],
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://localhost:3002', 
+      'https://sistemagestionjoinwithus.netlify.app',
+      'https://joinwithusoficial.netlify.app'
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   },

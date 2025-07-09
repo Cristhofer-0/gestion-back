@@ -26,8 +26,8 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001', 
   'http://localhost:3002', 
-  'https://sistemajoinwithus.netlify.app', 
-  'https://joinwithusweb.netlify.app'
+  'https://sistemagestionjoinwithus.netlify.app', 
+  'https://joinwithusoficial.netlify.app'
 ];
 
 app.use(cors({

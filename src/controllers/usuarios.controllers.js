@@ -262,9 +262,9 @@ export const obtenerUsuarioPorEmail = async (req, res) => {
 };
 
 export const enviarEnlaceReset = async (req, res) => {
-  const { email } = req.body;
+  const { email, cliente } = req.body;
 
-  console.log("📥 Solicitud de restablecimiento recibida para:", email);
+  //console.log("📥 Solicitud de restablecimiento recibida para:", email);
 
   try {
     const usuario = await User.findOne({ where: { Email: email } });
@@ -274,10 +274,7 @@ export const enviarEnlaceReset = async (req, res) => {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    console.log("✅ Usuario encontrado:", {
-      id: usuario.id,
-      Email: usuario.Email,
-    });
+    //console.log("✅ Usuario encontrado:", {id: usuario.id, Email: usuario.Email,});
 
     const resetToken = jwt.sign(
       {
@@ -288,16 +285,16 @@ export const enviarEnlaceReset = async (req, res) => {
       { expiresIn: "15m" }
     );
 
-    console.log("🔐 Token generado:", resetToken);
+    //console.log("🔐 Token generado:", resetToken);
 
      // URL base según el cliente
     const baseUrl =
       cliente === "ecommerce"
-        ? "http://localhost:3001"
-        : "http://localhost:3000"; // Por defecto "gestion"
+        ? "https://joinwithusoficial.netlify.app/usuario"
+        : "https://sistemagestionjoinwithus.netlify.app"; // Por defecto "gestion"
 
-    const resetLink = `${baseUrl}/http://localhost:3000/changePassword?token=${resetToken}`;
-    console.log("🔗 Enlace de restablecimiento:", resetLink);
+    const resetLink = `${baseUrl}/changePassword?token=${resetToken}`;
+    //console.log("🔗 Enlace de restablecimiento:", resetLink);
 
     // ENVÍO DEL CORREO
     const transporter = nodemailer.createTransport({
@@ -339,7 +336,7 @@ export const enviarEnlaceReset = async (req, res) => {
 ,
     });
 
-    console.log("✉️ Correo enviado exitosamente a:", email);
+    //console.log("✉️ Correo enviado exitosamente a:", email);
 
     res.json({ message: "Enlace de restablecimiento enviado al correo." });
   } catch (error) {
