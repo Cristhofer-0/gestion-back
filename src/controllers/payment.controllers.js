@@ -172,7 +172,7 @@ export const ordenPagada = async (req, res) => {
       })
     );
 
-    console.log(`Órdenes de ${userId} actualizadas a "paid" y stock actualizado.`);
+    //console.log(`Órdenes de ${userId} actualizadas a "paid" y stock actualizado.`);
 
     const redirUrl = process.env.URL_PRUEBAS_DE_MRD;
     return res.redirect(`${redirUrl}/carrito?status=paid`); //aca va el front

@@ -92,7 +92,7 @@ export const updateEvento = async (req, res) => {
     const eventoId = req.params.id;
 
     try {
-        console.log("Recibido en backend:", req.body) 
+        //console.log("Recibido en backend:", req.body) 
 
         const [updatedRows] = await Evento.update(req.body, {
             where: { EventId: eventoId },

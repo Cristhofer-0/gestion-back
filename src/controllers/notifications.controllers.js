@@ -156,7 +156,7 @@ export const marcarNotificacionComoLeida = async (req, res) => {
 
 export const marcarTodasNotificacionesComoLeidas = async (req, res) => {
   const userId = req.params.userId;
-  console.log("🧪 Backend: marcando todas como leídas para UserId:", userId);
+  //console.log("🧪 Backend: marcando todas como leídas para UserId:", userId);
 
   try {
     const [updatedCount] = await Notificacion.update(
@@ -164,7 +164,7 @@ export const marcarTodasNotificacionesComoLeidas = async (req, res) => {
       { where: { UserId: userId } }
     );
 
-    console.log("✅ Filas actualizadas:", updatedCount);
+    //console.log("✅ Filas actualizadas:", updatedCount);
 
     if (updatedCount === 0) {
       return res.status(404).json({ message: "No se actualizaron notificaciones" });

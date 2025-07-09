@@ -293,7 +293,7 @@ export const enviarEnlaceReset = async (req, res) => {
         ? "https://joinwithusoficial.netlify.app/usuario"
         : "https://sistemagestionjoinwithus.netlify.app"; // Por defecto "gestion"
 
-    const resetLink = `${baseUrl}/changePassword?token=${resetToken}`;
+    const resetLink = `${baseUrl}/http://localhost:3000/changePassword?token=${resetToken}`;
     //console.log("🔗 Enlace de restablecimiento:", resetLink);
 
     // ENVÍO DEL CORREO

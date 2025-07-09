@@ -47,7 +47,7 @@ io.on('connection', (socket) => {
 // Conectar a la base de datos
 await sequelize.authenticate()
   .then(() => {
-    console.log('Conexión a la base de datos establecida correctamente.');
+    //console.log('Conexión a la base de datos establecida correctamente.');
 
     // Iniciar el servidor
     const PORT = process.env.APP_PORT || 3000;
