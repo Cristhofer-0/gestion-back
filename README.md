@@ -1,6 +1,10 @@
 # 🧠 Gestión Back
 
-Backend del sistema **Proyec-Tec**, desarrollado en **Node.js** con **Express** y base de datos **SQL** (usando Sequelize ORM). Este servicio maneja la lógica principal del sistema: usuarios, eventos, tickets, notificaciones, pedidos, reseñas y más.
+Backend del sistema **JoinWithUs**, desarrollado en **Node.js** con **Express** y base de datos **SQL** (usando Sequelize ORM). Este servicio maneja la lógica principal del sistema: usuarios, eventos, tickets, notificaciones, pedidos, reseñas y más.
+
+<p align="center">
+  <img src="https://i.imgur.com/Bf9Y16B.png" alt="JoinWithUs Logo" width="300"/>
+</p>
 
 ---
 
